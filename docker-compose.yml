@@ -1,0 +1,13 @@
+version: "2.1"
+
+services:
+  foxess-mqtt:
+    image: mho/foxess-mqtt
+    container_name: foxess-mqtt
+    environment:
+      - MQTT_HOST=127.0.0.1
+      - MQTT_USERNAME=username
+      - MQTT_PASSWORD=password
+      - FOXESS_USERNAME=username
+      - FOXESS_PASSWORD=password
+      - DEVICE_ID=this-is-uuis
