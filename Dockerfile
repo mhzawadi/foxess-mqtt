@@ -9,7 +9,7 @@ RUN apt-get update && \
     curl jq vim && \
     useradd -d /foxess foxess && \
     pip3 install mqttools; \
-    chown foxess:users /foxess -R;
+    chown foxess /foxess -R;
 
 WORKDIR /foxess
 USER foxess
