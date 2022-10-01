@@ -3,10 +3,9 @@ LABEL Matthew Horwood <matt@horwood.biz>
 
 COPY . /foxess
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install python3-pip python3-wheel \
-    curl jq vim && \
+RUN RUN apk update && \
+    apk add py3-pip py3-wheel \
+    curl jq && \
     useradd -d /foxess foxess && \
     pip3 install mqttools; \
     chown foxess /foxess -R;
