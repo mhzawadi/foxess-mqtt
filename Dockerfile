@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM alpine:3.16
 LABEL Matthew Horwood <matt@horwood.biz>
 
 COPY . /foxess
@@ -6,7 +6,7 @@ COPY . /foxess
 RUN apk update && \
     apk add py3-pip py3-wheel \
     curl jq && \
-    useradd -d /foxess foxess && \
+    adduser -D -h /foxess foxess && \
     pip3 install mqttools; \
     chown foxess:root /foxess -R;
 
