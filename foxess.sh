@@ -4,7 +4,7 @@ setup_ha_mqtt(){
   MQTT_KEY=$1
   MQTT_TOPIC=$2
   # Config for date sensor
-  /usr/local/bin/mqttools publish \
+  /usr/bin/mqttools publish \
     --retain \
     --host ${MQTT_HOST} \
     --username ${MQTT_USERNAME} \
@@ -30,7 +30,7 @@ setup_ha_mqtt_kwh(){
   MQTT_KEY=$1
   MQTT_TOPIC=$2
   # Config for date sensor
-  /usr/local/bin/mqttools publish \
+  /usr/bin/mqttools publish \
     --retain \
     --host ${MQTT_HOST} \
     --username ${MQTT_USERNAME} \
@@ -159,7 +159,7 @@ do
       VALUE_KWH=$(python3 -c "print(round(float(${VALUE} * 0.08), 2))")
     fi
   fi
-  /usr/local/bin/mqttools publish \
+  /usr/bin/mqttools publish \
   --retain \
   --host ${MQTT_HOST} \
   --username ${MQTT_USERNAME} \
@@ -170,7 +170,7 @@ do
   # KW * TIME = KWH
   # 0.253 * 0.08 = KWH (the KW from foxess * 5 minutes as decimal)
   # $($VALUE * 0.08) | bc > mqtt
-  /usr/local/bin/mqttools publish \
+  /usr/bin/mqttools publish \
   --retain \
   --host ${MQTT_HOST} \
   --username ${MQTT_USERNAME} \

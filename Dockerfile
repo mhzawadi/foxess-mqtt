@@ -7,10 +7,8 @@ RUN apk update && \
     apk add py3-pip py3-wheel \
     curl jq bash && \
     adduser -D -h /foxess foxess && \
-    pip3 install mqttools; \
-    chown foxess:root /foxess -R;
+    pip3 install mqttools;
 
 WORKDIR /foxess
-USER foxess
 
 CMD ["/foxess/run.sh"]
