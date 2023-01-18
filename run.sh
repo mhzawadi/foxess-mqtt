@@ -2,6 +2,6 @@
 
 while true
 do
-  ./foxess.sh
+  ./foxess-data.sh
   sleep 300
 done
