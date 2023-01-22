@@ -15,4 +15,4 @@ RUN apt-get update && \
 WORKDIR /foxess
 USER foxess
 
-CMD ["/foxess/foxess.sh"]
+CMD ["/foxess/run.sh"]
