@@ -5,8 +5,7 @@ This is a very simple tool to get the data out of foxesscloud and into MQTT, it 
 ## Running
 
 ```bash
-docker pull mhzawadi/foxess-mqtt
-docker run --name picocms \
+docker run --name foxescloud \
   -e MQTT_HOST=192.168.0.2 \
   -e MQTT_USERNAME=homeassistant \
   -e MQTT_PASSWORD=ASecurePassword \
