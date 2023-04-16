@@ -2,6 +2,6 @@
 
 while true
 do
-  ./foxess-data.sh
+  php run.php
   sleep 300
 done

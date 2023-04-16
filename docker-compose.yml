@@ -1,13 +1,22 @@
 version: "2.1"
 
 services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - /Users/matt/git/foxess-mqtt/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /Users/matt/git/foxess-mqtt/mqtt/users.txt:/mosquitto/data/users.txt
+
   foxess-mqtt:
     image: mho/foxess-mqtt
     container_name: foxess-mqtt
     environment:
-      - MQTT_HOST=127.0.0.1
+      - MQTT_HOST=mosquitto
       - MQTT_USERNAME=username
       - MQTT_PASSWORD=password
       - FOXESS_USERNAME=username
       - FOXESS_PASSWORD=password
-      - DEVICE_ID=this-is-uuis
+      - DEVICE_ID=this-is-uuid
+    volumes:
+      - /Users/matt/git/foxess-mqtt:/foxess-mqtt

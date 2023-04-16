@@ -1,0 +1,26 @@
+{
+    "name": "mhzawadi/foxess-mqtt",
+    "description": "Foxess Cloud data to MQTT",
+    "license": "MIT",
+    "keywords": ["foxess","mqtt"],
+    "authors": [
+        {
+            "name": "Matthew Horwood",
+            "email": "matt@horwood.biz"
+        }
+    ],
+    "require" : {
+        "php-mqtt/client" : "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.5.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MHorwood\\foxess_mqtt\\": "src"
+        },
+        "psr-4": {
+            "MHorwood\\loader\\": "."
+        }
+    }
+}

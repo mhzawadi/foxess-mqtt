@@ -37,15 +37,21 @@ collect_data(){
   https://www.foxesscloud.com/c/v0/device/history/raw |
   jq > /tmp/raw.json
 
-  # Check if we need to login
-  if [ $(jq -r '.errno' /tmp/raw.json) -eq 41809 ]
+  if [ -s /tmp/raw.json ]
   then
-    ~/bin/foxess-login.sh
-    collect_data
-  elif [ $(jq -r '.errno' /tmp/raw.json) -gt 0 ]
-  then
-    # if .errno greater then 0
-    echo "We have an error getting data, we have logged in fine"
+    # Check if we need to login
+    if [ $(jq -r '.errno' /tmp/raw.json) -eq 41809 ]
+    then
+      ~/bin/foxess-login.sh
+      collect_data
+    elif [ $(jq -r '.errno' /tmp/raw.json) -gt 0 ]
+    then
+      # if .errno greater then 0
+      echo "We have an error getting data, we have logged in fine"
+      exit 1
+    fi
+  else
+    echo "We have an error getting data, the file is empty"
     exit 1
   fi
 
