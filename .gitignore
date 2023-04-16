@@ -65,3 +65,4 @@ fabric.properties
 # Sonarlint plugin
 .idea/sonarlint
 vendor
+data
