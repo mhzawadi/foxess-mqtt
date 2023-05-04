@@ -2,10 +2,19 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\model\config;
 
 class mqtt extends json {
 
+  protected $config;
   public function __construct(){
+    try {
+      $this->config = new config();
+    } catch (Exception $e) {
+      echo 'Missing config: ',  $e->getMessage(), "\n";
+    }
+
+
   }
 
   /**
@@ -52,7 +61,11 @@ class mqtt extends json {
         "exp_aft": 86400
       }';
       echo 'Post to MQTT foxesscloud-'.$name.'_kwh'."\n";
-      $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'_kwh/config', $data);
+      try {
+        $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'_kwh/config', $data);
+      } catch (\Exception $e) {
+        echo "MQTT not yet ready, need to sleep on first run maybe";
+      }
     }
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT1H"));
@@ -70,15 +83,14 @@ class mqtt extends json {
    * @param string data
    * @return return type
    */
-  protected function post_mqtt($foxess_data, $topic, $data) {
-    $config = $this->load_from_file('data/config.json');
+  public function post_mqtt($topic, $data) {
     $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
       // The username used for authentication when connecting to the broker.
-      ->setUsername($config['mqtt_user'])
+      ->setUsername($this->config->mqtt_user)
       // The password used for authentication when connecting to the broker.
-      ->setPassword($config['mqtt_pass']);
-    $server   = $config['mqtt_host'];
-    $port     = $config['mqtt_port'];
+      ->setPassword($this->config->mqtt_pass);
+    $server   = $this->config->mqtt_host;
+    $port     = $this->config->mqtt_port;
     $clientId = 'foxess_cloud_mqtt';
 
     $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);

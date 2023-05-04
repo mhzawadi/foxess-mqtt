@@ -17,9 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MHorwood\\foxess_mqtt\\": "src"
-        },
-        "psr-4": {
+            "MHorwood\\foxess_mqtt\\": "src",
             "MHorwood\\loader\\": "."
         }
     }

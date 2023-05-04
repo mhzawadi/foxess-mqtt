@@ -15,4 +15,5 @@ RUN apk update && apk upgrade && \
 COPY . /foxess-mqtt
 WORKDIR /foxess-mqtt
 RUN composer install;
+VOLUME /foxess-mqtt/data
 CMD ["/foxess-mqtt/run.sh"]

@@ -2,8 +2,19 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\model\config;
 
 class login extends json {
+
+  protected $config;
+  public function __construct(){
+    try {
+      $this->config = new config();
+    } catch (Exception $e) {
+      echo 'Missing config: ',  $e->getMessage(), "\n";
+    }
+  }
+
   /**
    * Login to Foxess Cloud
    *
@@ -12,13 +23,12 @@ class login extends json {
    * @param type var Description
    * @return return type
    */
-  protected function login() {
-    $config = $this->load_from_file('data/config.json');
+  public function login() {
     $foxess_data = $this->load_from_file('data/foxess_data.json');
     echo 'Need to login'."\n";
     $data = '{
-        "user": "'.$this->config['foxess_username'].'",
-        "password": "'.$this->config['foxess_password'].'"
+        "user": "'.$this->config->foxess_username.'",
+        "password": "'.$this->config->foxess_password.'"
     }';
     set_time_limit(0);
     $curl = curl_init();
@@ -47,7 +57,18 @@ class login extends json {
     $return_data = json_decode(curl_exec($curl), true);
     $foxess_data['token'] = $return_data['result']['token'];
     curl_close($curl);
-    $this->save_to_file('data/foxess_data.json', $foxess_data);
-    echo 'Logged in and token saved'."\n";
+    if($return_data['errno'] === 40401){
+      echo 'Too many logins';
+      return false;
+    }
+
+    try {
+      $this->save_to_file('data/foxess_data.json', $foxess_data);
+      echo 'Logged in and token saved'."\n";
+      return $foxess_data['token'];
+    } catch (\Exception $e) {
+      echo 'We got a token, but it didnt save';
+      return false;
+    }
   }
 }

@@ -7,16 +7,13 @@ services:
     volumes:
       - /Users/matt/git/foxess-mqtt/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - /Users/matt/git/foxess-mqtt/mqtt/users.txt:/mosquitto/data/users.txt
+    ports:
+      - 1883:1883
 
   foxess-mqtt:
-    image: mho/foxess-mqtt
+    image: mhzawadi/foxess-mqtt:dev-php
     container_name: foxess-mqtt
-    environment:
-      - MQTT_HOST=mosquitto
-      - MQTT_USERNAME=username
-      - MQTT_PASSWORD=password
-      - FOXESS_USERNAME=username
-      - FOXESS_PASSWORD=password
-      - DEVICE_ID=this-is-uuid
     volumes:
-      - /Users/matt/git/foxess-mqtt:/foxess-mqtt
+      - /Users/matt/data/foxess:/foxess-mqtt/data
+    environment:
+      - TIMEZONE=Europe/London

@@ -4,6 +4,8 @@ namespace MHorwood\foxess_mqtt\controller;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\model\data;
 use MHorwood\foxess_mqtt\model\mqtt;
+use MHorwood\foxess_mqtt\model\login;
+use MHorwood\foxess_mqtt\model\config;
 
 class foxess_data extends json {
 
@@ -12,11 +14,17 @@ class foxess_data extends json {
   protected $login;
   protected $mqtt;
   protected $data;
+  protected $config;
 
   public function __construct(){
     $this->login = new login();
     $this->data  = new data();
     $this->mqtt  = new mqtt();
+    try {
+      $this->config = new config();
+    } catch (Exception $e) {
+      echo 'Missing config: ',  $e->getMessage(), "\n";
+    }
 
     echo 'Start of work'."\n";
     # load the json data from file
@@ -38,17 +46,16 @@ class foxess_data extends json {
    *
    */
   protected function collect_data() {
-    $config = $this->load_from_file('data/config.json');
     echo 'Collect data from the cloud'."\n";
     $data = '{
-        "deviceID": '.$config['device_id'].',
-        '.json_encode($this->foxess_data['variables']).',
-        "timespan": "day",
+        "deviceID": "'.$this->config->device_id.'",
+        "variables": '.json_encode($this->foxess_data['variables']).',
+        "timespan": "hour",
         "beginDate": {
             "year": '.date("Y").',
-            "month": '.date("m").',
-            "day": '.date("d").',
-            "hour": '.date("H").',
+            "month": '.date("n").',
+            "day": '.date("j").',
+            "hour": '.date("G").',
             "minute": 0,
             "second": 0
         }
@@ -78,18 +85,28 @@ class foxess_data extends json {
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    var_dump($return_data);
+    $this->save_to_file('data/collected.json', $return_data);
     if(is_null($return_data) === false){
-      if($return_data['errno'] == 41809){
-        echo 'we need to login again'."\n";
-        $this->login->login();
-        $this->collect_data();
-      }elseif($return_data['errno'] > 0){
-        echo 'We have an error getting data, we have logged in fine';
+      if($return_data['errno'] == 40401){
+        echo 'Too many logins';
         exit;
+      }elseif($return_data['errno'] == 41809){
+        echo 'we need to login again'."\n";
+        if($this->foxess_data['token'] = $this->login->login()){
+          $this->collect_data();
+        }else{
+          echo 'why are we here';
+          exit;
+        }
+      }elseif($return_data['errno'] > 0){
+        echo 'We have an error getting data, we have logged in fine'."\n";
+        echo 'Error: '.$return_data['errno']."\n";
+        exit;
+      }else{
+        echo 'We have the data, ready to process'."\n";
       }
     }else{
-      echo 'We have an error getting data, the file is empty';
+      echo 'We have an error getting data, the file is empty'."\n";
       exit;
     }
     $this->collected_data = $return_data;
