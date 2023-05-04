@@ -28,7 +28,7 @@ class data extends json {
         $data = end($collected_data['result'][$i]['data']);
         $name = $collected_data['result'][$i]['variable'];
         if(substr($data['time'], 0, 13) == date('Y-m-d H')){
-          $value_kw = $data['value'];
+          $value_kw = round($data['value'], 2);
           $value_kwh = round(($foxess_data['result'][$name] + $data['value']), 2);
         }else{
           $value_kw = 0;
