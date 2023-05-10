@@ -26,7 +26,7 @@ class foxess_data extends json {
       echo 'Missing config: ',  $e->getMessage(), "\n";
     }
 
-    echo 'Start of work'."\n";
+    echo date('Y-m-d H:i:s').' - Start of work'."\n";
     # load the json data from file
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
     if($this->foxess_data['setup'] < time()){
@@ -34,7 +34,7 @@ class foxess_data extends json {
     }
     $this->collect_data();
     $this->data->process_data($this->foxess_data, $this->collected_data);
-    echo 'Work complete'."\n";
+    echo date('Y-m-d H:i:s').' - Work complete'."\n";
   }
 
 
