@@ -90,7 +90,8 @@ class foxess_data extends json {
       if($return_data['errno'] == 40401){
         echo 'Too many logins';
         exit;
-      }elseif($return_data['errno'] == 41809){
+      }elseif($return_data['errno'] == 41809 ||
+              $return_data['errno'] == 41808){
         echo 'we need to login again'."\n";
         if($this->foxess_data['token'] = $this->login->login()){
           $this->collect_data();
