@@ -14,8 +14,8 @@ curl -s -X POST \
 -H 'X-Requested-With: XMLHttpRequest' \
 -H 'token: ' \
 -d "{
-    \"user\": \"${FOXESS_PASSWORD}\",
-    \"password\": \"${FOXESS_USERNAME}\"
+    \"user\": \"${FOXESS_USERNAME}\",
+    \"password\": \"${FOXESS_PASSWORD}\"
 }" \
 https://www.foxesscloud.com/c/v0/user/login |
 jq -r '.result.token' > .token
