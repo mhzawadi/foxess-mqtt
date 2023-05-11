@@ -1,6 +1,6 @@
 # Horwoods Foxess Cloud Data collector
 
-This is a very simple tool to get the data out of foxesscloud and into MQTT, it has some very rough edges.
+This is a very simple tool to get the data out of FoxEss-cloud and into MQTT, it has some very rough edges.
 
 ## Running
 
@@ -20,7 +20,7 @@ docker run --name foxescloud \
 The new PHP script uses json for the config,
 you can copy the below code and paste into config.josn or run the image and wait for it spit out the files.
 
-`device_id` - the UUID that can be found on foxesscloud in the url path on the Inverter Details page.
+`device_id` - the UUID that can be found on FoxEss-cloud in the url path on the Inverter Details page.
 Please make sure that this is exact value from inverter details page address between = and & character:
 
 The json for the config.json file
