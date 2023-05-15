@@ -1,26 +1,37 @@
 # Horwoods Foxess Cloud Data collector
 
-This is a very simple tool to get the data out of foxesscloud and into MQTT, it has some very rough edges.
+This is a very simple tool to get the data out of FoxEss-cloud and into MQTT, it has some very rough edges.
 
 ## Running
 
 ```bash
 docker run --name foxescloud \
-  -e MQTT_HOST=192.168.0.2 \
-  -e MQTT_USERNAME=homeassistant \
-  -e MQTT_PASSWORD=ASecurePassword \
-  -e FOXESS_USERNAME=foxAccount \
-  -e FOXESS_PASSWORD=foxPassword \
-  -e DEVICE_ID=a-b-d-c-d \
+  -e - TIMEZONE=Europe/London \
+  -v /home/user/foxess_data:/foxess-mqtt/data \
   mhzawadi/foxess-mqtt
 ```
 
 ## Docker environment variables
 
-- MQTT_HOST the host or IP of your MQTT server
-- MQTT_USERNAME - the username for MQTT
-- MQTT_PASSWORD - the password for MQTT
-- FOXESS_USERNAME - your Foxess Cloud login
-- FOXESS_PASSWORD - your Foxess Cloud login
-- DEVICE_ID - the UUID that can be found on foxesscloud in the url path on the Inverter Details page.
-  - Please make sure that this is exact value from inverter details page address between = and & character:
+- TIMEZONE - This is the time your in, else use UTC [List of Supported Timezones](https://www.php.net/manual/en/timezones.php)
+
+## Config file
+
+The new PHP script uses json for the config,
+you can copy the below code and paste into config.josn or run the image and wait for it spit out the files.
+
+`device_id` - the UUID that can be found on FoxEss-cloud in the url path on the Inverter Details page.
+Please make sure that this is exact value from inverter details page address between = and & character:
+
+The json for the config.json file
+```
+{
+  "foxess_username": "username",
+  "foxess_password": "secretPassword",
+  "device_id": "device_id",
+  "mqtt_host": "mosquitto",
+  "mqtt_port": "1883",
+  "mqtt_user": "foxess",
+  "mqtt_pass": "foxess"
+}
+```

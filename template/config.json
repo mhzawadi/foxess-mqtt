@@ -1,0 +1,9 @@
+{
+  "foxess_username": "changeme",
+  "foxess_password": "changeme",
+  "device_id": "changeme",
+  "mqtt_host": "changeme",
+  "mqtt_port": "changeme",
+  "mqtt_user": "changeme",
+  "mqtt_pass": "changeme"
+}

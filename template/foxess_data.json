@@ -1,0 +1,32 @@
+{
+    "setup": "",
+    "token": "",
+    "variables": {
+        "0": "generationPower",
+        "1": "feedinPower",
+        "2": "batChargePower",
+        "3": "batDischargePower",
+        "4": "gridConsumptionPower",
+        "5": "loadsPower",
+        "6": "SoC",
+        "7": "batTemperature",
+        "8": "pv1Power",
+        "9": "pv2Power",
+        "10": "pv3Power",
+        "11": "pv4Power"
+    },
+    "result": {
+        "generationPower": 0,
+        "feedinPower": 0,
+        "batChargePower": 0,
+        "batDischargePower": 0,
+        "gridConsumptionPower": 0,
+        "loadsPower": 0,
+        "SoC": 0,
+        "batTemperature": 0,
+        "pv1Power": 0,
+        "pv2Power": 0,
+        "pv3Power": 0,
+        "pv4Power": 0
+    }
+}
