@@ -2,6 +2,7 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\classes\logger;
 use MHorwood\foxess_mqtt\model\config;
 
 class login extends json {
@@ -24,8 +25,7 @@ class login extends json {
    * @return return type
    */
   public function login() {
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
-    echo 'Need to login'."\n";
+    $this->log('start of login');
     $data = '{
         "user": "'.$this->config->foxess_username.'",
         "password": "'.$this->config->foxess_password.'"
@@ -55,20 +55,11 @@ class login extends json {
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    $foxess_data['token'] = $return_data['result']['token'];
     curl_close($curl);
     if($return_data['errno'] === 40401){
-      echo 'Too many logins';
       return false;
-    }
-
-    try {
-      $this->save_to_file('data/foxess_data.json', $foxess_data);
-      echo 'Logged in and token saved'."\n";
-      return $foxess_data['token'];
-    } catch (\Exception $e) {
-      echo 'We got a token, but it didnt save';
-      return false;
+    }else{
+      return $return_data['result']['token'];
     }
   }
 }

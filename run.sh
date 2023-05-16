@@ -15,12 +15,18 @@ then
   cp /foxess-mqtt/template/foxess_data.json /foxess-mqtt/data/foxess_data.json
   echo 'Please update to config.json file'
   exit 1;
+elif [[ ! -f /foxess-mqtt/data/foxess_data.json ]]
+then
+  echo "missing data store"
+  cp /foxess-mqtt/template/foxess_data.json /foxess-mqtt/data/foxess_data.json
 else
-  echo "first run will sleep for 5 seconds to allow MQTT to get setup"
-  sleep 5
-  while true
-  do
-    php run.php
-    sleep 300
-  done
+  echo "We have all the files we need"
 fi
+
+echo "first run will sleep for 5 seconds to allow MQTT to get setup"
+sleep 5
+while true
+do
+  php run.php
+  sleep 300
+done

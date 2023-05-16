@@ -2,6 +2,7 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\classes\logger;
 
 class Exception extends \Exception {}
 
@@ -26,7 +27,7 @@ class config extends json {
       $this->mqtt_user = $config['mqtt_user'];
       $this->mqtt_pass = $config['mqtt_pass'];
     } catch (Exception $e) {
-      echo 'Missing config: ',  $e->getMessage(), "\n";
+      $this->log('Missing config: '.  $e->getMessage());
     }
 
 
