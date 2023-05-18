@@ -57,6 +57,7 @@ class login extends json {
     $return_data = json_decode(curl_exec($curl), true);
     curl_close($curl);
     if($return_data['errno'] > 0){
+      $this->log('WE have a login error, dropping out of run');
       return false;
     }else{
       return $return_data['result']['token'];
