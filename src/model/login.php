@@ -56,7 +56,7 @@ class login extends json {
     ] );
     $return_data = json_decode(curl_exec($curl), true);
     curl_close($curl);
-    if($return_data['errno'] == 40401){
+    if($return_data['errno'] > 0){
       return false;
     }else{
       return $return_data['result']['token'];
