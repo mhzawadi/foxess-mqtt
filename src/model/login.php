@@ -28,7 +28,7 @@ class login extends json {
     $this->log('start of login');
     $data = '{
         "user": "'.$this->config->foxess_username.'",
-        "password": "'.$this->config->foxess_password.'"
+        "password": "'.md5($this->config->foxess_password).'"
     }';
     set_time_limit(0);
     $curl = curl_init();
@@ -57,7 +57,11 @@ class login extends json {
     $return_data = json_decode(curl_exec($curl), true);
     curl_close($curl);
     if($return_data['errno'] > 0){
-      $this->log('WE have a login error, dropping out of run');
+      if($return_data['errno'] == 41807){
+        $this->log('Error: '.$return_data['errno'].', maybe check your username and password');
+      }else{
+        $this->log('We got an error, '.$return_data['errno'].'. Dropping out of run');
+      }
       return false;
     }else{
       return $return_data['result']['token'];
