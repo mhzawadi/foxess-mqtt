@@ -2,6 +2,7 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\classes\logger;
 use MHorwood\foxess_mqtt\model\config;
 
 class login extends json {
@@ -24,11 +25,10 @@ class login extends json {
    * @return return type
    */
   public function login() {
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
-    echo 'Need to login'."\n";
+    $this->log('start of login');
     $data = '{
         "user": "'.$this->config->foxess_username.'",
-        "password": "'.$this->config->foxess_password.'"
+        "password": "'.md5($this->config->foxess_password).'"
     }';
     set_time_limit(0);
     $curl = curl_init();
@@ -55,20 +55,16 @@ class login extends json {
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    $foxess_data['token'] = $return_data['result']['token'];
     curl_close($curl);
-    if($return_data['errno'] === 40401){
-      echo 'Too many logins';
+    if($return_data['errno'] > 0){
+      if($return_data['errno'] == 41807){
+        $this->log('Error: '.$return_data['errno'].', maybe check your username and password');
+      }else{
+        $this->log('We got an error, '.$return_data['errno'].'. Dropping out of run');
+      }
       return false;
-    }
-
-    try {
-      $this->save_to_file('data/foxess_data.json', $foxess_data);
-      echo 'Logged in and token saved'."\n";
-      return $foxess_data['token'];
-    } catch (\Exception $e) {
-      echo 'We got a token, but it didnt save';
-      return false;
+    }else{
+      return $return_data['result']['token'];
     }
   }
 }

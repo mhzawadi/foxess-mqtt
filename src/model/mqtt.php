@@ -2,6 +2,7 @@
 
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
+use MHorwood\foxess_mqtt\classes\logger;
 use MHorwood\foxess_mqtt\model\config;
 
 class mqtt extends json {
@@ -11,7 +12,7 @@ class mqtt extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      echo 'Missing config: ',  $e->getMessage(), "\n";
+      $this->log('Missing config: '. $e->getMessage());
     }
 
 
@@ -25,7 +26,7 @@ class mqtt extends json {
    * @return return type
    */
   public function setup_mqtt($foxess_data) {
-    echo 'Start of MQTT setup for HA'."\n";
+    $this->log('Start of MQTT setup for HA');
     foreach($foxess_data['result'] as $name => $value){
       $data = '{
       "name": "foxesscloud '.$name.'",
@@ -42,7 +43,7 @@ class mqtt extends json {
       "dev_cla": "power",
       "exp_aft": 86400
       }';
-      echo 'Post to MQTT foxesscloud-'.$name."\n";
+      $this->log('Post to MQTT foxesscloud-'.$name);
       $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'/config', $data);
       $data = '{
         "name": "foxesscloud '.$name.'_kwh",
@@ -60,7 +61,7 @@ class mqtt extends json {
         "state_class": "total_increasing",
         "exp_aft": 86400
       }';
-      echo 'Post to MQTT foxesscloud-'.$name.'_kwh'."\n";
+      $this->log('Post to MQTT foxesscloud-'.$name.'_kwh');
       try {
         $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'_kwh/config', $data);
       } catch (\Exception $e) {
@@ -69,9 +70,10 @@ class mqtt extends json {
     }
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT1H"));
-    $foxess_data['setup'] = $time->format('U');
-    $this->save_to_file('data/foxess_data.json', $foxess_data);
-    echo 'Setup complete'."\n";
+    // $foxess_data['setup'] = $time->format('U');
+    // $this->save_to_file('data/foxess_data.json', $foxess_data);
+    $this->log('Setup complete');
+    return $time->format('U');
   }
 
   /**

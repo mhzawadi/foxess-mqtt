@@ -1,8 +1,9 @@
 <?php
 
 namespace MHorwood\foxess_mqtt\classes;
+use MHorwood\foxess_mqtt\classes\logger;
 
-class json {
+class json extends logger {
 
   /**
    * load a file and load to array
@@ -14,7 +15,7 @@ class json {
       fclose($handle);
       return $json;
     } catch (Exception $e) {
-      echo 'Issues upening file: ', $e->getMessage(), "\n";
+      echo 'Issues opening file: ', $e->getMessage(), "\n";
       return false;
     }
 
