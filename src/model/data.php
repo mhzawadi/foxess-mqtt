@@ -18,7 +18,7 @@ class data extends json {
    */
   public function process_data($foxess_data, $collected_data)  {
     $this->mqtt  = new mqtt();
-    $this->log('Start of processing the data');
+    $this->log('Start of processing the data', 3);
     $options_count = count($collected_data['result']);
     for( $i = 0 ; $i < $options_count; $i++ ){
       $option = $collected_data['result'][$i]['variable'];
@@ -38,13 +38,13 @@ class data extends json {
         }
       }
       $this->mqtt->post_mqtt('foxesscloud/'.$name, $value_kw);
-      $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT');
+      $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 3);
 
       $foxess_data['result'][$name] = $value_kwh;
       $this->save_to_file('data/foxess_data.json', $foxess_data);
       $this->mqtt->post_mqtt('foxesscloud/'.$name.'_kwh', $value_kwh);
-      $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT');
+      $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 3);
     }
-    $this->log('Data procssed and posted to MQTT');
+    $this->log('Data procssed and posted to MQTT', 3);
   }
 }

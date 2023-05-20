@@ -12,7 +12,7 @@ class login extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      echo 'Missing config: ',  $e->getMessage(), "\n";
+      $this->log('Missing config: '.  $e->getMessage(), 1);
     }
   }
 
@@ -25,7 +25,7 @@ class login extends json {
    * @return return type
    */
   public function login() {
-    $this->log('start of login');
+    $this->log('start of login', 3);
     $data = '{
         "user": "'.$this->config->foxess_username.'",
         "password": "'.md5($this->config->foxess_password).'"
@@ -58,9 +58,9 @@ class login extends json {
     curl_close($curl);
     if($return_data['errno'] > 0){
       if($return_data['errno'] == 41807){
-        $this->log('Error: '.$return_data['errno'].', maybe check your username and password');
+        $this->log('Error: '.$return_data['errno'].', maybe check your username and password', 2);
       }else{
-        $this->log('We got an error, '.$return_data['errno'].'. Dropping out of run');
+        $this->log('We got an error, '.$return_data['errno'].'. Dropping out of run', 2);
       }
       return false;
     }else{

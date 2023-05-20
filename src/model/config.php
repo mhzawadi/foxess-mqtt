@@ -26,8 +26,15 @@ class config extends json {
       $this->mqtt_port = $config['mqtt_port'];
       $this->mqtt_user = $config['mqtt_user'];
       $this->mqtt_pass = $config['mqtt_pass'];
+      if(!defined('log_level') && isset($config['log_level'])){
+        define('log_level', $config['log_level']);
+      }elseif(!defined('log_level') && getenv('LOG_LEVEL') !== false){
+        define('log_level', getenv('LOG_LEVEL'));
+      }elseif(!defined('log_level')){
+        define('log_level', 2);
+      }
     } catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage());
+      $this->log('Missing config: '.  $e->getMessage(), 1);
     }
 
 

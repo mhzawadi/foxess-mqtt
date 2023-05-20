@@ -12,7 +12,7 @@ class mqtt extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      $this->log('Missing config: '. $e->getMessage());
+      $this->log('Missing config: '. $e->getMessage(), 1);
     }
 
 
@@ -26,7 +26,7 @@ class mqtt extends json {
    * @return return type
    */
   public function setup_mqtt($foxess_data) {
-    $this->log('Start of MQTT setup for HA');
+    $this->log('Start of MQTT setup for HA', 3);
     foreach($foxess_data['result'] as $name => $value){
       $data = '{
       "name": "foxesscloud '.$name.'",
@@ -43,7 +43,7 @@ class mqtt extends json {
       "dev_cla": "power",
       "exp_aft": 86400
       }';
-      $this->log('Post to MQTT foxesscloud-'.$name);
+      $this->log('Post to MQTT foxesscloud-'.$name, 3);
       $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'/config', $data);
       $data = '{
         "name": "foxesscloud '.$name.'_kwh",
@@ -61,7 +61,7 @@ class mqtt extends json {
         "state_class": "total_increasing",
         "exp_aft": 86400
       }';
-      $this->log('Post to MQTT foxesscloud-'.$name.'_kwh');
+      $this->log('Post to MQTT foxesscloud-'.$name.'_kwh', 3);
       try {
         $this->post_mqtt('homeassistant/sensor/foxesscloud-'.$name.'_kwh/config', $data);
       } catch (\Exception $e) {
@@ -70,9 +70,7 @@ class mqtt extends json {
     }
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT1H"));
-    // $foxess_data['setup'] = $time->format('U');
-    // $this->save_to_file('data/foxess_data.json', $foxess_data);
-    $this->log('Setup complete');
+    $this->log('Setup complete', 3);
     return $time->format('U');
   }
 
