@@ -30,6 +30,11 @@ class foxess_data extends json {
     $this->log('Start of work', 2);
     # load the json data from file
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
+    if(count($this->foxess_data['variables']) < 63){
+      $this->foxess_data['setup'] = '0';
+      $new_variables = $this->load_from_file('template/foxess_data.json');
+      $this->foxess_data['variables'] = $new_variables['variables'];
+    }
     if($this->foxess_data['setup'] < time()){
       $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
     }
