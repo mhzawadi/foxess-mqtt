@@ -29,7 +29,7 @@ class mqtt extends json {
     $this->log('Start of MQTT setup for HA', 3);
     foreach($foxess_data['result'] as $name => $value){
       if(strstr($name, 'Temperature') !== false || strstr($name, 'Soc') !== false ||
-          strstr($option, 'Temperation') !== false
+          strstr($name, 'Temperation') !== false
         ){
         $dev_cla = 'temperature';
         $unit = '°C';
