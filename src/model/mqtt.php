@@ -34,7 +34,7 @@ class mqtt extends json {
         $dev_cla = 'temperature';
         $unit = '°C';
       }elseif(strstr($name, 'Volt') !== false){
-        $dev_cla = 'Volt';
+        $dev_cla = 'voltage';
         $unit = 'V';
       }elseif(strstr($name, 'Current') !== false){
         $dev_cla = 'current';
