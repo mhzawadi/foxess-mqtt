@@ -33,7 +33,7 @@ class data extends json {
         }else{
           $data = end($collected_data['result'][$i]['data']);
           if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
-	    if($$data['value'] > 0){
+	    if($data['value'] > 0){
               $value = $data['value'];
             }else{
               $value = 0;
