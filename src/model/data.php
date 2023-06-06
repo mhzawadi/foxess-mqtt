@@ -33,11 +33,7 @@ class data extends json {
         }else{
           $data = end($collected_data['result'][$i]['data']);
           if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
-	    if($data['value'] > 0){
-              $value = $data['value'];
-            }else{
-              $value = 0;
-            }
+              $value = abs($data['value']);
           }else{
             $value = 0;
           }
@@ -55,17 +51,12 @@ class data extends json {
           $data = end($collected_data['result'][$i]['data']);
           $name = $collected_data['result'][$i]['variable'];
           if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
-            if($data['value'] > 0){
-              $value_kw = round($data['value'], 2, PHP_ROUND_HALF_DOWN);
-              $sum = round(($data['value']*0.08), 2, PHP_ROUND_HALF_DOWN);
-              $value_kwh = round(($foxess_data['result'][$name] + $sum), 2, PHP_ROUND_HALF_DOWN);
-            }else{
-              $value_kw = 0;
-              $value_kwh = $foxess_data['result'][$name];
-            }
+            $value_kw = abs(round($data['value'], 2, PHP_ROUND_HALF_DOWN));
+            $sum = round(($data['value']*0.08), 2, PHP_ROUND_HALF_DOWN);
+            $value_kwh = abs(round(($foxess_data['result'][$name] + $sum), 2, PHP_ROUND_HALF_DOWN));
           }else{
             $value_kw = 0;
-            $value_kwh = $foxess_data['result'][$name];
+            $value_kwh = abs($foxess_data['result'][$name]);
           }
         }
         $this->mqtt->post_mqtt('foxesscloud/'.$name, $value_kw);
