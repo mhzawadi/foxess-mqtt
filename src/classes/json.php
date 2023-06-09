@@ -15,7 +15,7 @@ class json extends logger {
       fclose($handle);
       return $json;
     } catch (Exception $e) {
-      echo 'Issues opening file: ', $e->getMessage(), "\n";
+      $this->log('Issues opening file: '.$e->getMessage(), 1);
       return false;
     }
 
@@ -32,7 +32,7 @@ class json extends logger {
       sleep(1);
       return true;
     } catch (\Exception $e) {
-      echo 'that didnt work';
+      $this->log('Issues saving file: '.$e->getMessage(), 1);
       return false;
     }
   }

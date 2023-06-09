@@ -32,6 +32,9 @@ The json for the config.json file
   "mqtt_host": "mosquitto",
   "mqtt_port": "1883",
   "mqtt_user": "foxess",
-  "mqtt_pass": "foxess"
+  "mqtt_pass": "foxess",
+  "log_level": 2
 }
 ```
+
+- log_level: is how much you want in the console, 1 is minimal, 2 is basic, 3 is everything

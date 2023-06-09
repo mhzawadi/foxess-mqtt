@@ -24,12 +24,17 @@ class foxess_data extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      $this->log('Missing config: '.$e->getMessage());
+      $this->log('Missing config: '.$e->getMessage(), 1);
     }
 
-    $this->log('Start of work');
+    $this->log('Start of work', 2);
     # load the json data from file
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
+    if(count($this->foxess_data['variables']) < 63){
+      $this->foxess_data['setup'] = '0';
+      $new_variables = $this->load_from_file('template/foxess_data.json');
+      $this->foxess_data['variables'] = $new_variables['variables'];
+    }
     if($this->foxess_data['setup'] < time()){
       $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
     }
@@ -42,7 +47,7 @@ class foxess_data extends json {
       $this->data->process_data($this->foxess_data, $this->collected_data);
     }
 
-    $this->log("Work complete");
+    $this->log("Work complete", 2);
   }
 
 
@@ -54,7 +59,7 @@ class foxess_data extends json {
    *
    */
   protected function collect_data() {
-    $this->log('Collect data from the cloud');
+    $this->log('Collect data from the cloud', 3);
     $data = '{
         "deviceID": "'.$this->config->device_id.'",
         "variables": '.json_encode($this->foxess_data['variables']).',
@@ -96,31 +101,31 @@ class foxess_data extends json {
     $this->save_to_file('data/collected.json', $return_data);
     if(is_null($return_data) === false){
       if($return_data['errno'] == 40401){
-        $this->log('Too many logins');
+        $this->log('Too many logins', 2);
         return 1;
       }elseif($return_data['errno'] == 41809 ||
               $return_data['errno'] == 41808){
-        $this->log('we need to login again');
+        $this->log('we need to login again', 3);
         if($this->foxess_data['token'] = $this->login->login()){
-          $this->log('login complte');
+          $this->log('login complte', 3);
           return 2;
         }else{
-          $this->log('login error');
+          $this->log('login error', 2);
           return 1;
         }
       }elseif($return_data['errno'] > 0){
-        $this->log('We have an error getting data, we have logged in fine');
-        $this->log('Error: '.$return_data['errno']);
+        $this->log('We have an error getting data, we have logged in fine', 3);
+        $this->log('Error: '.$return_data['errno'], 2);
         return 1;
       }else{
-        $this->log('We have the data, ready to process');
+        $this->log('We have the data, ready to process', 3);
       }
     }else{
-      $this->log('We have an error getting data, the file is empty');
+      $this->log('We have an error getting data, the file is empty', 3);
       return 1;
     }
     $this->collected_data = $return_data;
-    $this->log('Data collected');
+    $this->log('Data collected', 3);
     return 0;
   }
 }
