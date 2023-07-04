@@ -23,34 +23,36 @@ class foxess_data extends json {
     $this->mqtt  = new mqtt();
     try {
       $this->config = new config();
+      $this->config->get_error_codes();
     } catch (Exception $e) {
       $this->log('Missing config: '.$e->getMessage(), 1);
     }
-
-    $this->log('Start of work', 2);
-    # load the json data from file
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
-    if(count($this->foxess_data['variables']) < 63){
-      $this->foxess_data['setup'] = '0';
-      $new_variables = $this->load_from_file('template/foxess_data.json');
-      $this->foxess_data['variables'] = $new_variables['variables'];
+
+    $check_login = false;
+    while($check_login === false){
+      $check_login = $this->login->check_login($this->foxess_data['token']);
+      if($check_login === false){
+        $this->foxess_data['token'] = $this->login->login();
+      }
     }
+    if($check_login !== true){
+      exit($check_login);
+    }else{
+      $this->save_to_file('data/foxess_data.json', $this->foxess_data);
+    }
+    $this->data->device_list();
     if($this->foxess_data['setup'] < time()){
       $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
     }
-    $data_run = 2;
-    while($data_run > 1){
-      $data_run = $this->collect_data();
+
+    for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
+      $this->collect_data($this->foxess_data['devices'][$device]['deviceSN'], $this->foxess_data['devices'][$device]['deviceID']);
     }
 
-    if($data_run === 0){
-      $this->data->process_data($this->foxess_data, $this->collected_data);
-    }
-
+    $this->data->process_data($this->foxess_data, $this->collected_data);
     $this->log("Work complete", 2);
   }
-
-
 
   /**
    * Collect data from Foxess Cloud
@@ -58,10 +60,10 @@ class foxess_data extends json {
    * use curl to collect the latest data from Foxes Cloud
    *
    */
-  protected function collect_data() {
+  protected function collect_data($deviceSN, $deviceID) {
     $this->log('Collect data from the cloud', 3);
     $data = '{
-        "deviceID": "'.$this->config->device_id.'",
+        "deviceID": "'.$deviceID.'",
         "variables": '.json_encode($this->foxess_data['variables']).',
         "timespan": "hour",
         "beginDate": {
@@ -98,34 +100,9 @@ class foxess_data extends json {
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    $this->save_to_file('data/collected.json', $return_data);
-    if(is_null($return_data) === false){
-      if($return_data['errno'] == 40401){
-        $this->log('Too many logins', 2);
-        return 1;
-      }elseif($return_data['errno'] == 41809 ||
-              $return_data['errno'] == 41808){
-        $this->log('we need to login again', 3);
-        if($this->foxess_data['token'] = $this->login->login()){
-          $this->log('login complte', 3);
-          return 2;
-        }else{
-          $this->log('login error', 2);
-          return 1;
-        }
-      }elseif($return_data['errno'] > 0){
-        $this->log('We have an error getting data, we have logged in fine', 3);
-        $this->log('Error: '.$return_data['errno'], 2);
-        return 1;
-      }else{
-        $this->log('We have the data, ready to process', 3);
-      }
-    }else{
-      $this->log('We have an error getting data, the file is empty', 3);
-      return 1;
-    }
-    $this->collected_data = $return_data;
+    $this->save_to_file('data/'.$deviceSN.'_collected.json', $return_data);
+    $this->collected_data[$deviceSN]['deviceSN'] = $deviceSN;
+    $this->collected_data[$deviceSN]['data'] = $return_data;
     $this->log('Data collected', 3);
-    return 0;
   }
 }
