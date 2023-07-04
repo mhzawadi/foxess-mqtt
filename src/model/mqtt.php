@@ -47,7 +47,7 @@ class mqtt extends json {
             "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'_kwh",
             "device": {
               "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-              "name": "foxesscloud",
+              "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
               "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
               "manufacturer": "FoxEss"
             },
@@ -70,7 +70,7 @@ class mqtt extends json {
         "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_ '.$name.'",
         "device": {
           "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-          "name": "foxesscloud",
+          "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
           "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
           "manufacturer": "FoxEss"
         },

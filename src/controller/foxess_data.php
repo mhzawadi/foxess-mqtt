@@ -47,7 +47,7 @@ class foxess_data extends json {
     }
 
     for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
-      $this->collect_data($this->foxess_data['devices'][$device]['deviceSN'], $this->foxess_data['devices'][$device]['deviceID']);
+      $this->collect_data($device);
     }
 
     $this->data->process_data($this->foxess_data, $this->collected_data);
@@ -60,10 +60,11 @@ class foxess_data extends json {
    * use curl to collect the latest data from Foxes Cloud
    *
    */
-  protected function collect_data($deviceSN, $deviceID) {
+  protected function collect_data($device) {
     $this->log('Collect data from the cloud', 3);
+    $deviceSN = $this->foxess_data['devices'][$device]['deviceSN'];
     $data = '{
-        "deviceID": "'.$deviceID.'",
+        "deviceID": "'.$this->foxess_data['devices'][$device]['deviceID'].'",
         "variables": '.json_encode($this->foxess_data['variables']).',
         "timespan": "hour",
         "beginDate": {
@@ -101,8 +102,7 @@ class foxess_data extends json {
     ] );
     $return_data = json_decode(curl_exec($curl), true);
     $this->save_to_file('data/'.$deviceSN.'_collected.json', $return_data);
-    $this->collected_data[$deviceSN]['deviceSN'] = $deviceSN;
-    $this->collected_data[$deviceSN]['data'] = $return_data;
+    $this->collected_data[$device] = $return_data;
     $this->log('Data collected', 3);
   }
 }

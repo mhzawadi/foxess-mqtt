@@ -78,58 +78,58 @@ class data extends json {
   public function process_data($foxess_data, $collected_data)  {
     $this->mqtt  = new mqtt();
     $this->log('Start of processing the data', 3);
-    foreach($collected_data as $device){ //for each device
-      print_r($device);
-      // $options_count = count($collected_data['result']);
-      // for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
-      //   $option = $collected_data['result'][$i]['variable'];
-      //   $name = $collected_data['result'][$i]['variable'];
-      //   if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
-      //      || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
-      //      strstr($option, 'Temperation') !== false
-      //     ){
-      //     $this->log($name);
-      //     if($collected_data['result'] == 'null'){
-      //       $value = 0;
-      //     }else{
-      //       $data = end($collected_data['result'][$i]['data']);
-      //       if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
-      //           $value = abs($data['value']);
-      //       }else{
-      //         $value = 0;
-      //       }
-      //       $this->mqtt->post_mqtt('foxesscloud/'.$name, $value);
-      //       $foxess_data['result'][$name] = $value;
-      //       $this->save_to_file('data/foxess_data.json', $foxess_data);
-      //       $this->log('Post '.$value.' of '.$name.' to MQTT', 3);
-      //
-      //     }
-      //   }else{
-      //     if($collected_data['result'] == 'null'){
-      //       $value_kw = 0;
-      //       $value_kwh = $foxess_data['result'][$i];
-      //     }else{
-      //       $data = end($collected_data['result'][$i]['data']);
-      //       $name = $collected_data['result'][$i]['variable'];
-      //       if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
-      //         $value_kw = abs(round($data['value'], 2, PHP_ROUND_HALF_DOWN));
-      //         $sum = round(($data['value']*0.08), 2, PHP_ROUND_HALF_DOWN);
-      //         $value_kwh = abs(round(($foxess_data['result'][$name] + $sum), 2, PHP_ROUND_HALF_DOWN));
-      //       }else{
-      //         $value_kw = 0;
-      //         $value_kwh = abs($foxess_data['result'][$name]);
-      //       }
-      //     }
-      //     $this->mqtt->post_mqtt('foxesscloud/'.$name, $value_kw);
-      //     $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 3);
-      //
-      //     $foxess_data['result'][$name] = $value_kwh;
-      //     $this->save_to_file('data/foxess_data.json', $foxess_data);
-      //     $this->mqtt->post_mqtt('foxesscloud/'.$name.'_kwh', $value_kwh);
-      //     $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 3);
-      //   }
-      // }
-      // $this->log('Data procssed and posted to MQTT', 3);
+    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
+      $options_count = count($collected_data[$device]['result']);
+      $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
+      for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
+        $option = $collected_data[$device]['result'][$i]['variable'];
+        $name = $collected_data[$device]['result'][$i]['variable'];
+        if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
+           || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
+           strstr($option, 'Temperation') !== false
+          ){
+          $this->log($name);
+          if($collected_data[$device]['result'] == 'null'){
+            $value = 0;
+          }else{
+            $data = end($collected_data[$device]['result'][$i]['data']);
+            if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
+                $value = abs($data['value']);
+            }else{
+              $value = 0;
+            }
+            $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name, $value);
+            $foxess_data['devices'][$device]['variables'][$name] = $value;
+            $this->save_to_file('data/foxess_data.json', $foxess_data);
+            $this->log('Post '.$value.' of '.$name.' to MQTT', 3);
+
+          }
+        }else{
+          if($collected_data[$device]['result'] == 'null'){
+            $value_kw = 0;
+            $value_kwh = $foxess_data['devices'][$device]['variables'][$i];
+          }else{
+            $data = end($collected_data[$device]['result'][$i]['data']);
+            $name = $collected_data[$device]['result'][$i]['variable'];
+            if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
+              $value_kw = $data['value'];
+              $sum = ($data['value']*0.08);
+              $value_kwh = ($foxess_data['devices'][$device]['variables'][$name] + $sum);
+            }else{
+              $value_kw = 0;
+              $value_kwh = $foxess_data['devices'][$device]['variables'][$name];
+            }
+          }
+          $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
+          $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 3);
+
+          $foxess_data['devices'][$device]['variables'][$name] = $value_kwh;
+          $this->save_to_file('data/foxess_data.json', $foxess_data);
+          $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name.'_kwh', abs(round($value_kwh, 2)));
+          $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 3);
+        }
+      }
+      $this->log('Data procssed and posted to MQTT', 3);
     } // device
   }
 }
