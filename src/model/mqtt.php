@@ -27,8 +27,8 @@ class mqtt extends json {
    */
   public function setup_mqtt($foxess_data) {
     $this->log('Start of MQTT setup for HA', 3);
-    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){//for each device
-      foreach($foxess_data['result'] as $name => $value){//setup HA config for each device/entity
+    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //for each device
+      foreach($foxess_data['result'] as $name => $value){ //setup HA config for each device/entity
         if(strstr($name, 'Temperature') !== false || strstr($name, 'Soc') !== false ||
             strstr($name, 'Temperation') !== false
           ){
@@ -75,7 +75,7 @@ class mqtt extends json {
           "manufacturer": "FoxEss"
         },
         "stat_t": "~'.$name.'",
-        "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh",
+        "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'",
         "~": "foxesscloud/'.$foxess_data['devices'][$device]['deviceSN'].'/",
         "unit_of_measurement": "'.$unit.'",
         "dev_cla": "'.$dev_cla.'",
@@ -87,8 +87,8 @@ class mqtt extends json {
         } catch (Exception $e) {
           $this->log('MQTT not yet ready, need to sleep on first run maybe', 1);
         }
-      }
-    }
+      } //setup HA config for each device/entity
+    } //for each device
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT1H"));
     $this->log('Setup complete', 3);
