@@ -134,7 +134,7 @@ class foxess_data extends json {
       )
     );
     curl_setopt_array ( $curl , [
-    CURLOPT_URL => "https://www.foxesscloud.com/c/v0/device/earnings?$device",
+    CURLOPT_URL => "https://www.foxesscloud.com/c/v0/device/earnings?deviceID=$device",
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
