@@ -119,7 +119,7 @@ class data extends json {
             if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
               $value_kw = $data['value'];
               if(strstr($option, 'generationPower') !== false){ //Returns false or int
-                $value_kwh = $foxess_data['devices'][$device]['generationToday'];
+                $value_kwh = $foxess_data['devices'][$device]['generationTotal'];
               }else{
                 $sum = ($data['value']*0.05);
                 $value_kwh = ($foxess_data['devices'][$device]['variables'][$name] + $sum);
@@ -127,7 +127,7 @@ class data extends json {
             }else{
               $value_kw = 0;
               if(strstr($option, 'generationPower') !== false){ //Returns false or int
-                $value_kwh = $foxess_data['devices'][$device]['generationToday'];
+                $value_kwh = $foxess_data['devices'][$device]['generationTotal'];
               }else{
                 $value_kwh = $foxess_data['devices'][$device]['variables'][$name];
               }

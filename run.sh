@@ -23,7 +23,7 @@ else
   echo "We have all the files we need"
 fi
 
-echo "first run will sleep for 5 seconds to allow MQTT to get setup"
+echo "first run will sleep for 3 seconds to allow MQTT to get setup"
 sleep 3
 while true
 do
