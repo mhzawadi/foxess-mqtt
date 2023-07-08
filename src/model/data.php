@@ -55,6 +55,8 @@ class data extends json {
     ] );
     $return_data = json_decode(curl_exec($curl), true);
     if($return_data['errno'] > 0){
+      return false;
+    }else{
       $this->save_to_file('data/devices.json', $return_data);
 
       $this->log('storing devices', 3);
@@ -68,8 +70,6 @@ class data extends json {
       $this->save_to_file('data/foxess_data.json', $foxess_data);
       $this->log('all done', 3);
       return true;
-    }else{
-      return false;
     }
   }
 
