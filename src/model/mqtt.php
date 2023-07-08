@@ -67,7 +67,7 @@ class mqtt extends json {
           }
         }
         $data = '{
-        "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_ '.$name.'",
+        "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'",
         "device": {
           "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
           "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",

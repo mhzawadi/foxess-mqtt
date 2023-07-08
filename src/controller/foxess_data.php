@@ -41,7 +41,11 @@ class foxess_data extends json {
     }else{
       $this->save_to_file('data/foxess_data.json', $this->foxess_data);
     }
-    $this->data->device_list();
+    if( $this->data->device_list() === true ){
+      $this->foxess_data = $this->load_from_file('data/foxess_data.json');
+    }else{
+      $this->log("issues getting devices", 2);
+    }
     if($this->foxess_data['setup'] < time()){
       $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
     }
@@ -103,44 +107,6 @@ class foxess_data extends json {
     $return_data = json_decode(curl_exec($curl), true);
     $this->save_to_file('data/'.$deviceSN.'_collected.json', $return_data);
     $this->collected_data[$device] = $return_data;
-    $this->earnings($this->foxess_data['devices'][$device]['deviceID']);
     $this->log('Data collected', 3);
-  }
-
-  /**
-   * Collect stored earnings data and save to file
-   *
-   * @param type var The Device ID
-   */
-  protected function earnings($device)
-  {
-    // https://www.foxesscloud.com/c/v0/device/earnings?deviceID=50ec598b-b160-435c-9961-394245eace87
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER,
-      array(
-        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 OPR/89.0.4447.83',
-        'Accept: application/json, text/plain, */*',
-        'lang: en',
-        'sec-ch-ua-platform: macOS',
-        'Sec-Fetch-Site: same-origin',
-        'Sec-Fetch-Mode: cors',
-        'Sec-Fetch-Dest: empty',
-        'Referer: https://www.foxesscloud.com/login?redirect=/',
-        'Accept-Language: en-US;q=0.9,en;q=0.8,de;q=0.7,nl;q=0.6',
-        'Connection: keep-alive',
-        'X-Requested-With: XMLHttpRequest',
-        "token: ".$this->foxess_data['token'],
-        "Content-Type: application/json"
-      )
-    );
-    curl_setopt_array ( $curl , [
-    CURLOPT_URL => "https://www.foxesscloud.com/c/v0/device/earnings?deviceID=$device",
-    CURLOPT_RETURNTRANSFER => true
-    ] );
-    $return_data = json_decode(curl_exec($curl), true);
-    $earnings = $this->load_from_file('data/earnings.json');
-    $today = $return_data['result']['today']['generation'];
-    $earnings[$device][date("Y-m-d G:i")] = $today;
-    $this->save_to_file('data/earnings.json', $earnings);
   }
 }

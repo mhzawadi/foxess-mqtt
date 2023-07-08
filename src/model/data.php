@@ -54,18 +54,23 @@ class data extends json {
     CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    $this->save_to_file('data/devices.json', $return_data);
+    if($return_data['errno'] > 0){
+      $this->save_to_file('data/devices.json', $return_data);
 
-    $this->log('storing devices', 3);
-    $foxess_data['device_total'] = $return_data['result']['total'];
-    for( $device = 0; $device < $return_data['result']['total']; $device++ ){
-      if(!is_array($foxess_data['devices'][$device])){
-        $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
-        $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
+      $this->log('storing devices', 3);
+      $foxess_data['device_total'] = $return_data['result']['total'];
+      for( $device = 0; $device < $return_data['result']['total']; $device++ ){
+        if(!is_array($foxess_data['devices'][$device])){
+          $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
+          $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
+        }
       }
+      $this->save_to_file('data/foxess_data.json', $foxess_data);
+      $this->log('all done', 3);
+      return true;
+    }else{
+      return false;
     }
-    $this->save_to_file('data/foxess_data.json', $foxess_data);
-    $this->log('all done', 3);
   }
 
   /**
@@ -113,11 +118,19 @@ class data extends json {
             $name = $collected_data[$device]['result'][$i]['variable'];
             if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
               $value_kw = $data['value'];
-              $sum = ($data['value']*0.05);
-              $value_kwh = ($foxess_data['devices'][$device]['variables'][$name] + $sum);
+              if(strstr($option, 'generationPower') !== false){ //Returns false or int
+                $value_kwh = $foxess_data['devices'][$device]['generationToday'];
+              }else{
+                $sum = ($data['value']*0.05);
+                $value_kwh = ($foxess_data['devices'][$device]['variables'][$name] + $sum);
+              }
             }else{
               $value_kw = 0;
-              $value_kwh = $foxess_data['devices'][$device]['variables'][$name];
+              if(strstr($option, 'generationPower') !== false){ //Returns false or int
+                $value_kwh = $foxess_data['devices'][$device]['generationToday'];
+              }else{
+                $value_kwh = $foxess_data['devices'][$device]['variables'][$name];
+              }
             }
           }
           $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
