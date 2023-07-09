@@ -90,9 +90,9 @@ class data extends json {
       $options_count = count($collected_data[$device]['result']);
       $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
       for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
-        $this->log($name);
         $option = $collected_data[$device]['result'][$i]['variable'];
         $name = $collected_data[$device]['result'][$i]['variable'];
+        $this->log($name);
         if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
            || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
            strstr($option, 'Temperation') !== false
