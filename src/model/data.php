@@ -66,7 +66,8 @@ class data extends json {
           $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
           $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
         }else{
-          $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
+          $foxess_data['devices'][$device]['generationTotal'] = $return_data['result']['devices'][$device]['generationTotal'];
+          $foxess_data['devices'][$device]['generationToday'] = $return_data['result']['devices'][$device]['generationToday'];
         }
       }
       $this->save_to_file('data/foxess_data.json', $foxess_data);
