@@ -65,6 +65,8 @@ class data extends json {
         if(!is_array($foxess_data['devices'][$device])){
           $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
           $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
+        }else{
+          $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
         }
       }
       $this->save_to_file('data/foxess_data.json', $foxess_data);
@@ -87,13 +89,13 @@ class data extends json {
       $options_count = count($collected_data[$device]['result']);
       $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
       for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
+        $this->log($name);
         $option = $collected_data[$device]['result'][$i]['variable'];
         $name = $collected_data[$device]['result'][$i]['variable'];
         if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
            || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
            strstr($option, 'Temperation') !== false
           ){
-          $this->log($name);
           if($collected_data[$device]['result'] == 'null'){
             $value = 0;
           }else{
