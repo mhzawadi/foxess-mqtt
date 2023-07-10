@@ -23,10 +23,10 @@ else
   echo "We have all the files we need"
 fi
 
-echo "first run will sleep for 5 seconds to allow MQTT to get setup"
-sleep 5
+echo "first run will sleep for 3 seconds to allow MQTT to get setup"
+sleep 3
 while true
 do
   php run.php
-  sleep 300
+  sleep 180
 done

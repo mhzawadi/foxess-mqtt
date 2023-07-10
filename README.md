@@ -1,3 +1,10 @@
+# BREAKING CHANGE !!!!!
+
+The new version of this will create new devices for each inverter you have,
+that will have all the data for that inverter on it
+
+## BREAKING CHANGE !!!!
+
 # Horwoods Foxess Cloud Data collector
 
 This is a very simple tool to get the data out of FoxEss-cloud and into MQTT, it has some very rough edges.
@@ -20,15 +27,13 @@ docker run --name foxescloud \
 The new PHP script uses json for the config,
 you can copy the below code and paste into config.josn or run the image and wait for it spit out the files.
 
-`device_id` - the UUID that can be found on FoxEss-cloud in the url path on the Inverter Details page.
-Please make sure that this is exact value from inverter details page address between = and & character:
+You now dont need to provide your device ID as we now collect all devices in your account
 
 The json for the config.json file
 ```
 {
   "foxess_username": "username",
   "foxess_password": "secretPassword",
-  "device_id": "device_id",
   "mqtt_host": "mosquitto",
   "mqtt_port": "1883",
   "mqtt_user": "foxess",

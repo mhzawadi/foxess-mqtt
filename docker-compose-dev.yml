@@ -1,0 +1,20 @@
+version: "2.1"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - /Users/matt/git/foxess-mqtt/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /Users/matt/git/foxess-mqtt/mqtt/users.txt:/mosquitto/data/users.txt
+    ports:
+      - 1883:1883
+
+  foxess-mqtt:
+    image: mhzawadi/foxess-mqtt:dev-php
+    container_name: foxess-mqtt
+    volumes:
+      - /Users/matt/data/foxess:/foxess-mqtt/data
+    environment:
+      - TIMEZONE=Europe/London
+    command: ["/usr/bin/php", "run.php"]

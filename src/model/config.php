@@ -43,4 +43,49 @@ class config extends json {
         throw new Exception('default config found');
     }
   }
+
+  /**
+   * Get the list of error codes
+   *
+   */
+  public function get_error_codes()
+  {
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_HTTPHEADER,
+      array(
+        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 OPR/89.0.4447.83',
+        'Accept: application/json, text/plain, */*',
+        'lang: en',
+        'sec-ch-ua-platform: macOS',
+        'Sec-Fetch-Site: same-origin',
+        'Sec-Fetch-Mode: cors',
+        'Sec-Fetch-Dest: empty',
+        'Referer: https://www.foxesscloud.com/login?redirect=/',
+        'Accept-Language: en-US;q=0.9,en;q=0.8,de;q=0.7,nl;q=0.6',
+        'Connection: keep-alive',
+        'X-Requested-With: XMLHttpRequest',
+        'token: '
+      )
+    );
+    curl_setopt_array ( $curl , [
+      CURLOPT_URL => "https://www.foxesscloud.com/c/v0/errors/message",
+      CURLOPT_RETURNTRANSFER => true
+    ] );
+    $return_data = json_decode(curl_exec($curl), true);
+    $this->save_to_file('data/error_codes.json', $return_data['result']['messages']['en']);
+  }
+
+  /**
+   * Whats the error message
+   *
+   * use our list of error codes and get the message for it
+   *
+   * @param int errno The error number
+   * @return return string
+   */
+  public function errno($errno)
+  {
+    $errors = $this->load_from_file('data/error_codes.json');
+    return $errors[$errno];
+  }
 }
