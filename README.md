@@ -13,7 +13,7 @@ This is a very simple tool to get the data out of FoxEss-cloud and into MQTT, it
 
 ```bash
 docker run --name foxescloud \
-  -e - TIMEZONE=Europe/London \
+  -e TIMEZONE=Europe/London \
   -v /home/user/foxess_data:/foxess-mqtt/data \
   mhzawadi/foxess-mqtt
 ```
