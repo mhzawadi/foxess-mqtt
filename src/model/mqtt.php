@@ -32,7 +32,7 @@ class mqtt extends json {
         if(strstr($name, 'Temperature') !== false || strstr($name, 'Temperation') !== false ){
           $dev_cla = 'temperature';
           $unit = '°C';
-        }elseif(strstr($name, 'Soc') !== false){
+        }elseif(strstr($name, 'SoC') !== false){
           $dev_cla = 'power_factor';
           $unit = '%';
         }elseif(strstr($name, 'Volt') !== false){
