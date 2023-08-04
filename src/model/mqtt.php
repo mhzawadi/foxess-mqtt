@@ -45,7 +45,7 @@ class mqtt extends json {
           $dev_cla = 'power';
           $unit = 'kW';
           $data_kwh = '{
-            "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'_kwh",
+            "name": "'.$name.'_kwh",
             "device": {
               "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
               "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
@@ -68,7 +68,7 @@ class mqtt extends json {
           }
         }
         $data = '{
-        "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'",
+        "name": "'.$name.'",
         "device": {
           "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
           "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
