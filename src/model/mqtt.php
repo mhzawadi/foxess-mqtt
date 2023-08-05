@@ -29,11 +29,12 @@ class mqtt extends json {
     $this->log('Start of MQTT setup for HA', 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //for each device
       foreach($foxess_data['result'] as $name => $value){ //setup HA config for each device/entity
-        if(strstr($name, 'Temperature') !== false || strstr($name, 'Soc') !== false ||
-            strstr($name, 'Temperation') !== false
-          ){
+        if(strstr($name, 'Temperature') !== false || strstr($name, 'Temperation') !== false ){
           $dev_cla = 'temperature';
           $unit = '°C';
+        }elseif(strstr($name, 'SoC') !== false){
+          $dev_cla = 'power_factor';
+          $unit = '%';
         }elseif(strstr($name, 'Volt') !== false){
           $dev_cla = 'voltage';
           $unit = 'V';
@@ -44,7 +45,7 @@ class mqtt extends json {
           $dev_cla = 'power';
           $unit = 'kW';
           $data_kwh = '{
-            "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'_kwh",
+            "name": "'.$name.'_kwh",
             "device": {
               "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
               "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
@@ -67,7 +68,7 @@ class mqtt extends json {
           }
         }
         $data = '{
-        "name": "'.$foxess_data['devices'][$device]['deviceSN'].'_'.$name.'",
+        "name": "'.$name.'",
         "device": {
           "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
           "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
