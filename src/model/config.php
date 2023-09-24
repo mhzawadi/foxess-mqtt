@@ -15,6 +15,7 @@ class config extends json {
   public $mqtt_port;
   public $mqtt_user;
   public $mqtt_pass;
+  public $mqtt_topic;
 
   public function __construct(){
     try {
@@ -32,6 +33,11 @@ class config extends json {
         define('log_level', getenv('LOG_LEVEL'));
       }elseif(!defined('log_level')){
         define('log_level', 2);
+      }
+      if(isset($config['mqtt_topic'])){
+        $this->mqtt_topic = $config['mqtt_topic'];
+      }else{
+        $this->mqtt_topic = 'foxesscloud';
       }
     } catch (Exception $e) {
       $this->log('Missing config: '.  $e->getMessage(), 1);

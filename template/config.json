@@ -6,5 +6,6 @@
   "mqtt_port": "changeme",
   "mqtt_user": "changeme",
   "mqtt_pass": "changeme",
+  "mqtt_topic": "foxesscloud",
   "log_level": 2
 }

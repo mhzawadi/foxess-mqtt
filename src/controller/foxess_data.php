@@ -54,7 +54,7 @@ class foxess_data extends json {
       $this->collect_data($device);
     }
 
-    $this->data->process_data($this->foxess_data, $this->collected_data);
+    $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data);
     $this->log("Work complete", 2);
   }
 

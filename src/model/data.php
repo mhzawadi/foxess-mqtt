@@ -72,8 +72,65 @@ class data extends json {
       }
       $this->save_to_file('data/foxess_data.json', $foxess_data);
       $this->log('all done', 3);
+      $this->variable_list();
       return true;
     }
+  }
+
+  /**
+   * get device variables
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return return true
+   */
+  public function variable_list(){
+    $this->log('start of variable listing', 2);
+    $this->login = new login();
+    $foxess_data = $this->load_from_file('data/foxess_data.json');
+    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){//for each device
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_HTTPHEADER,
+        array(
+          'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 OPR/89.0.4447.83',
+          'Accept: application/json, text/plain, */*',
+          'lang: en',
+          'sec-ch-ua-platform: macOS',
+          'Sec-Fetch-Site: same-origin',
+          'Sec-Fetch-Mode: cors',
+          'Sec-Fetch-Dest: empty',
+          'Referer: https://www.foxesscloud.com/login?redirect=/',
+          'Accept-Language: en-US;q=0.9,en;q=0.8,de;q=0.7,nl;q=0.6',
+          'Connection: keep-alive',
+          'X-Requested-With: XMLHttpRequest',
+          "token: ".$foxess_data['token'],
+          "Content-Type: application/json"
+        )
+      );
+      curl_setopt_array ( $curl , [
+      CURLOPT_URL => "https://www.foxesscloud.com/c/v1/device/variables?deviceID=".$foxess_data['devices'][$device]['deviceID'],
+      CURLOPT_RETURNTRANSFER => true
+      ] );
+      $return_data = json_decode(curl_exec($curl), true);
+      if($return_data['errno'] > 0){
+        $this->log('error getting variables, file not saved', 3);
+        return false;
+      }else{
+        $this->save_to_file('data/'.$foxess_data['devices'][$device]['deviceSN'].'-variables.json', $return_data);
+        $variables = $return_data['result']['variables'];
+        $var_count = count($variables);
+        $this->log('storing variables', 3);
+        for( $i = 0 ; $i < $var_count; $i++ ){
+          if(!isset($foxess_data['devices'][$device]['variables'][$variables[$i]['variable']])){
+            $foxess_data['devices'][$device]['variables'][$variables[$i]['variable']] = 0;
+          }
+        }
+        $this->save_to_file('data/foxess_data.json', $foxess_data);
+      }
+    }
+    $this->log('all done', 3);
+    return true;
   }
 
   /**
@@ -83,7 +140,7 @@ class data extends json {
    *
    * @return return type
    */
-  public function process_data($foxess_data, $collected_data)  {
+  public function process_data($mqtt_topic, $foxess_data, $collected_data)  {
     $this->mqtt  = new mqtt();
     $this->log('Start of processing the data', 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
@@ -106,7 +163,7 @@ class data extends json {
             }else{
               $value = 0;
             }
-            $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name, $value);
+            $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $value);
             $foxess_data['devices'][$device]['variables'][$name] = $value;
             $this->save_to_file('data/foxess_data.json', $foxess_data);
             $this->log('Post '.$value.' of '.$name.' to MQTT', 3);
@@ -136,12 +193,12 @@ class data extends json {
               }
             }
           }
-          $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
+          $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
           $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 3);
 
           $foxess_data['devices'][$device]['variables'][$name] = $value_kwh;
           $this->save_to_file('data/foxess_data.json', $foxess_data);
-          $this->mqtt->post_mqtt('foxesscloud/'.$deviceSN.'/'.$name.'_kwh', abs(round($value_kwh, 2)));
+          $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($value_kwh, 2)));
           $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 3);
         }
       }
