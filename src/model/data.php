@@ -121,14 +121,16 @@ class data extends json {
         $variables = $return_data['result']['variables'];
         $var_count = count($variables);
         $this->log('storing variables', 3);
+        $foxess_data['devices'][$device]['variable_list'] = array();
         for( $i = 0 ; $i < $var_count; $i++ ){
+          $foxess_data['devices'][$device]['variable_list'][$i] = $variables[$i]['variable'];
           if(!isset($foxess_data['devices'][$device]['variables'][$variables[$i]['variable']])){
             $foxess_data['devices'][$device]['variables'][$variables[$i]['variable']] = 0;
           }
         }
-        $this->save_to_file('data/foxess_data.json', $foxess_data);
       }
     }
+    $this->save_to_file('data/foxess_data.json', $foxess_data);
     $this->log('all done', 3);
     return true;
   }

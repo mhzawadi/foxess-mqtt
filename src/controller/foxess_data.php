@@ -69,7 +69,7 @@ class foxess_data extends json {
     $deviceSN = $this->foxess_data['devices'][$device]['deviceSN'];
     $data = '{
         "deviceID": "'.$this->foxess_data['devices'][$device]['deviceID'].'",
-        "variables": '.json_encode($this->foxess_data['variables']).',
+        "variables": '.json_encode($this->foxess_data['devices'][$device]['variable_list']).',
         "timespan": "hour",
         "beginDate": {
             "year": '.date("Y").',
