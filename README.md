@@ -30,16 +30,21 @@ you can copy the below code and paste into config.josn or run the image and wait
 You now dont need to provide your device ID as we now collect all devices in your account
 
 The json for the config.json file
-```
+```json
 {
-  "foxess_username": "username",
-  "foxess_password": "secretPassword",
-  "mqtt_host": "mosquitto",
-  "mqtt_port": "1883",
-  "mqtt_user": "foxess",
-  "mqtt_pass": "foxess",
-  "log_level": 2
+  "foxess_username": "changeme",
+  "foxess_password": "changeme",
+  "device_id": "changeme",
+  "mqtt_host": "changeme",
+  "mqtt_port": "changeme",
+  "mqtt_user": "changeme",
+  "mqtt_pass": "changeme",
+  "mqtt_topic": "foxesscloud",
+  "log_level": 2,
+  "total_over_time": true
 }
 ```
 
 - log_level: is how much you want in the console, 1 is minimal, 2 is basic, 3 is everything
+- mqtt_topic: this is a custom top level topic, you will still get sub topics for each device on your account
+- total_over_time: this will track KWh over time if true (the default) or whats downloaded at every run

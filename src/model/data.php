@@ -142,7 +142,7 @@ class data extends json {
    *
    * @return return type
    */
-  public function process_data($mqtt_topic, $foxess_data, $collected_data)  {
+  public function process_data($mqtt_topic, $foxess_data, $collected_data, $total_over_time)  {
     $this->mqtt  = new mqtt();
     $this->log('Start of processing the data', 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
@@ -174,24 +174,24 @@ class data extends json {
         }else{
           if($collected_data[$device]['result'] == 'null'){
             $value_kw = 0;
-            $value_kwh = $foxess_data['devices'][$device]['variables'][$i];
+            $value_kwh = $total_over_time ? $foxess_data['devices'][$device]['variables'][$i] : 0;
           }else{
             $data = end($collected_data[$device]['result'][$i]['data']);
             $name = $collected_data[$device]['result'][$i]['variable'];
             if(is_array($data) && substr($data['time'], 0, 13) == date('Y-m-d H')){
               $value_kw = $data['value'];
               if(strstr($option, 'generationPower') !== false){ //Returns false or int
-                $value_kwh = $foxess_data['devices'][$device]['generationTotal'];
+                $value_kwh = $total_over_time ? $foxess_data['devices'][$device]['generationTotal'] : $foxess_data['devices'][$device]['variables'][$i];
               }else{
                 $sum = ($data['value']*0.05);
-                $value_kwh = ($foxess_data['devices'][$device]['variables'][$name] + $sum);
+                $value_kwh = $total_over_time ? ($foxess_data['devices'][$device]['variables'][$name] + $sum) : $sum;
               }
             }else{
               $value_kw = 0;
               if(strstr($option, 'generationPower') !== false){ //Returns false or int
-                $value_kwh = $foxess_data['devices'][$device]['generationTotal'];
+                $value_kwh = $total_over_time ? $foxess_data['devices'][$device]['generationTotal'] : 0;
               }else{
-                $value_kwh = $foxess_data['devices'][$device]['variables'][$name];
+                $value_kwh = $total_over_time ? $foxess_data['devices'][$device]['variables'][$i] : 0;
               }
             }
           }

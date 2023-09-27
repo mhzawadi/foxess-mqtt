@@ -35,9 +35,16 @@ class config extends json {
         define('log_level', 2);
       }
       if(isset($config['mqtt_topic'])){
+        $this->log('Using MQTT topic: '.$config['mqtt_topic'], 3);
         $this->mqtt_topic = $config['mqtt_topic'];
       }else{
         $this->mqtt_topic = 'foxesscloud';
+      }
+      if(isset($config['total_over_time'])){
+        $this->log('total over time is: '.var_export($config['total_over_time'], true), 3);
+        $this->total_over_time = $config['total_over_time'];
+      }else{
+        $this->total_over_time = 'true';
       }
     } catch (Exception $e) {
       $this->log('Missing config: '.  $e->getMessage(), 1);
