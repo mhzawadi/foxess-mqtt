@@ -54,7 +54,7 @@ class foxess_data extends json {
       $this->collect_data($device);
     }
 
-    $this->data->process_data($this->foxess_data, $this->collected_data);
+    $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);
     $this->log("Work complete", 2);
   }
 
@@ -69,7 +69,7 @@ class foxess_data extends json {
     $deviceSN = $this->foxess_data['devices'][$device]['deviceSN'];
     $data = '{
         "deviceID": "'.$this->foxess_data['devices'][$device]['deviceID'].'",
-        "variables": '.json_encode($this->foxess_data['variables']).',
+        "variables": '.json_encode($this->foxess_data['devices'][$device]['variable_list']).',
         "timespan": "hour",
         "beginDate": {
             "year": '.date("Y").',

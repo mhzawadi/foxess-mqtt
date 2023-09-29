@@ -48,13 +48,13 @@ class mqtt extends json {
             "name": "'.$name.'_kwh",
             "device": {
               "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-              "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
+              "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
               "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
               "manufacturer": "FoxEss"
             },
             "stat_t": "~'.$name.'_kwh",
             "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh",
-            "~": "foxesscloud/'.$foxess_data['devices'][$device]['deviceSN'].'/",
+            "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
             "unit_of_measurement": "kWh",
             "dev_cla": "energy",
             "state_class": "total_increasing",
@@ -71,13 +71,13 @@ class mqtt extends json {
         "name": "'.$name.'",
         "device": {
           "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-          "name": "foxesscloud-'.$foxess_data['devices'][$device]['deviceSN'].'",
+          "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
           "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
           "manufacturer": "FoxEss"
         },
         "stat_t": "~'.$name.'",
         "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'",
-        "~": "foxesscloud/'.$foxess_data['devices'][$device]['deviceSN'].'/",
+        "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
         "unit_of_measurement": "'.$unit.'",
         "dev_cla": "'.$dev_cla.'",
         "exp_aft": 86400
