@@ -27,6 +27,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tag: mhzawadi/foxess-mqtt:${{ steps.prepare.outputs.version }}
+          tags: mhzawadi/foxess-mqtt:${{ steps.prepare.outputs.version }}
           file: Dockerfile-php
           platform: linux/amd64,linux/arm64,linux/arm/v7
