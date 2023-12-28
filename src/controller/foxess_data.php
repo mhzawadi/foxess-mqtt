@@ -29,33 +29,21 @@ class foxess_data extends json {
     }
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
 
-    $check_login = false;
-    while($check_login === false){
-      $check_login = $this->login->check_login($this->foxess_data['token']);
-      if($check_login === false){
-        $this->foxess_data['token'] = $this->login->login();
-      }
-    }
-    if($check_login !== true){
-      exit($check_login);
-    }else{
-      $this->save_to_file('data/foxess_data.json', $this->foxess_data);
-    }
     if( $this->data->device_list() === true ){
       $this->foxess_data = $this->load_from_file('data/foxess_data.json');
     }else{
       $this->log("issues getting devices", 2);
     }
-    if($this->foxess_data['setup'] < time()){
-      $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
-    }
-
-    for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
-      $this->collect_data($device);
-    }
-
-    $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);
-    $this->log("Work complete", 2);
+    // if($this->foxess_data['setup'] < time()){
+    //   $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
+    // }
+    //
+    // for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
+    //   $this->collect_data($device);
+    // }
+    //
+    // $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);
+    // $this->log("Work complete", 2);
   }
 
   /**

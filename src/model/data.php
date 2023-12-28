@@ -4,56 +4,41 @@ namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
 use MHorwood\foxess_mqtt\model\mqtt;
-use MHorwood\foxess_mqtt\model\login;
+use MHorwood\foxess_mqtt\model\request;
+use MHorwood\foxess_mqtt\model\config;
 
 class data extends json {
 
   protected $mqtt;
-  protected $login;
+  protected $request;
+  protected $config;
+  public function __construct(){
+    try {
+      $this->config = new config();
+    } catch (Exception $e) {
+      $this->log('Missing config: '.  $e->getMessage(), 1);
+    }
+  }
 
   /**
    * Get the list of devices
    **/
   public function device_list(){
     $this->log('start of device listing', 2);
-    $this->login = new login();
+    $this->request = new request();
     $foxess_data = $this->load_from_file('data/foxess_data.json');
-    $data = '{
-        "pageSize": 10,
-        "currentPage": 1,
-        "total": 0,
-        "condition": {
-            "queryDate": {
-                "begin": 0,
-                "end": 0
-            }
-        }
-    }';
+    $data = '{"variables": ["generationPower"]}';
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER,
-      array(
-        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 OPR/89.0.4447.83',
-        'Accept: application/json, text/plain, */*',
-        'lang: en',
-        'sec-ch-ua-platform: macOS',
-        'Sec-Fetch-Site: same-origin',
-        'Sec-Fetch-Mode: cors',
-        'Sec-Fetch-Dest: empty',
-        'Referer: https://www.foxesscloud.com/login?redirect=/',
-        'Accept-Language: en-US;q=0.9,en;q=0.8,de;q=0.7,nl;q=0.6',
-        'Connection: keep-alive',
-        'X-Requested-With: XMLHttpRequest',
-        "token: ".$foxess_data['token'],
-        "Content-Type: application/json"
-      )
-    );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $this->request->get_signature($this->config->foxess_apikey, '/op/v0/device/real/query', 'en') );
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt_array ( $curl , [
-    CURLOPT_URL => "https://www.foxesscloud.com/generic/v0/device/list",
-    CURLOPT_RETURNTRANSFER => true
+      CURLOPT_URL => "https://www.foxesscloud.com/op/v0/device/real/query",
+      CURLOPT_RETURNTRANSFER => true
     ] );
-    $return_data = json_decode(curl_exec($curl), true);
+    $this_curl = curl_exec($curl);
+    print_r($this_curl);
+    $return_data = json_decode($this_curl, true);
     if($return_data['errno'] > 0){
       return false;
     }else{

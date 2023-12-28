@@ -22,6 +22,7 @@ class config extends json {
       $config = $this->load_from_file('data/config.json');
       $this->foxess_username = $config['foxess_username'];
       $this->foxess_password = $config['foxess_password'];
+      $this->foxess_apikey = $config['foxess_apikey'];
       $this->device_id = $config['device_id'];
       $this->mqtt_host = $config['mqtt_host'];
       $this->mqtt_port = $config['mqtt_port'];
