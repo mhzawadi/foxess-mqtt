@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
       - name: checkout code
         uses: actions/checkout@v4
       - name: Set up QEMU
@@ -22,7 +18,7 @@ jobs:
       - name: Prepare
         id: prepare
         env:
-          VERSION: ${{ github.head_ref }}
+          VERSION: ${{ github.ref_name }}
         run: |
           echo ::set-output name=version::${VERSION}
       - name: login to docker hub
