@@ -28,16 +28,18 @@ class data extends json {
     $this->request = new request();
     $foxess_data = $this->load_from_file('data/foxess_data.json');
     $data = '{"variables": ["generationPower"]}';
+    $url ='/op/v0/device/real/query';
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $this->request->get_signature($this->config->foxess_apikey, '/op/v0/device/real/query', 'en') );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $this->request->get_signature($this->config->foxess_apikey, $url, 'en') );
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt_array ( $curl , [
-      CURLOPT_URL => "https://www.foxesscloud.com/op/v0/device/real/query",
+      CURLOPT_URL => "https://www.foxesscloud.com$url",
       CURLOPT_RETURNTRANSFER => true
     ] );
     $this_curl = curl_exec($curl);
-    print_r($this_curl);
+    var_dump($curl);
+    $this->log($this_curl, 4);
     $return_data = json_decode($this_curl, true);
     if($return_data['errno'] > 0){
       return false;

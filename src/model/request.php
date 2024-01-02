@@ -28,7 +28,7 @@ class request extends json {
   {
     $timestamp = floor(microtime(true) * 1000);
     $signature = $url.'\r\n'.$token.'\r\n'.$timestamp;
-    print_r($signature);
+    $this->log($signature, 4);
 
     $result = array(
         'token: '.$token,
@@ -37,7 +37,7 @@ class request extends json {
         'signature: '.md5(utf8_encode($signature)),
         'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
     );
-    print_r($result);
+    $this->log($result, 4);
     return $result;
   }
 

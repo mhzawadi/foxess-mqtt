@@ -13,7 +13,11 @@ class logger {
       define('log_level', 2);
     }
 
-    if($level <= constant('log_level')){
+    if($level == 4){
+      echo date('Y-m-d H:i:s').' - ';
+      print_r($text);
+      echo "\n";
+    }elseif($level <= constant('log_level')){
       echo date('Y-m-d H:i:s').' - '.$text."\n";
     }
   }
