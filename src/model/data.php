@@ -27,17 +27,20 @@ class data extends json {
     $this->log('start of device listing', 2);
     $this->request = new request();
     $foxess_data = $this->load_from_file('data/foxess_data.json');
-    $data = '{"variables": ["generationPower"]}';
+    $data = '{"variables": ["pv1Power","pv2Power"]}';
+    $url ='/op/v0/device/real/query';
+    $headers = $this->request->get_signature($this->config->foxess_apikey, $url, 'en');
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $this->request->get_signature($this->config->foxess_apikey, '/op/v0/device/real/query', 'en') );
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers );
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt_array ( $curl , [
-      CURLOPT_URL => "https://www.foxesscloud.com/op/v0/device/real/query",
+      CURLOPT_URL => "https://www.foxesscloud.com$url",
       CURLOPT_RETURNTRANSFER => true
     ] );
     $this_curl = curl_exec($curl);
-    print_r($this_curl);
+    var_dump($curl);
+    $this->log($this_curl, 4);
     $return_data = json_decode($this_curl, true);
     if($return_data['errno'] > 0){
       return false;
