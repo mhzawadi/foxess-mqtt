@@ -35,7 +35,8 @@ class request extends json {
         'lang: '.$lang,
         'timestamp: '.$timestamp,
         'signature: '.md5(utf8_encode($signature)),
-        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+        'Content-Type: application/json'
     );
     print_r($result);
     return $result;
