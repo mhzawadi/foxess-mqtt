@@ -29,6 +29,8 @@ class foxess_data extends json {
     }
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
 
+// NEED TO ADD THE LOGIN PROCESS BACK IN
+
     if( $this->data->device_list() === true ){
       $this->foxess_data = $this->load_from_file('data/foxess_data.json');
     }else{
