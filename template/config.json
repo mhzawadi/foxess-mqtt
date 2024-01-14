@@ -1,6 +1,8 @@
 {
   "foxess_username": "changeme",
   "foxess_password": "changeme",
+  "foxess_apikey": "changeme",
+  "foxess_lang": "en",
   "device_id": "changeme",
   "mqtt_host": "changeme",
   "mqtt_port": "changeme",

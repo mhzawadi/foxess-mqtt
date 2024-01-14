@@ -12,7 +12,7 @@ class mqtt extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      $this->log('Missing config: '. $e->getMessage(), 1);
+      $this->log('Missing config: '. $e->getMessage(), 3, 1);
     }
 
 
@@ -26,7 +26,7 @@ class mqtt extends json {
    * @return return type
    */
   public function setup_mqtt($foxess_data) {
-    $this->log('Start of MQTT setup for HA', 3);
+    $this->log('Start of MQTT setup for HA', 1, 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //for each device
       foreach($foxess_data['result'] as $name => $value){ //setup HA config for each device/entity
         if(strstr($name, 'Temperature') !== false || strstr($name, 'Temperation') !== false ){
@@ -60,11 +60,11 @@ class mqtt extends json {
             "state_class": "total_increasing",
             "exp_aft": 86400
           }';
-          $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh', 3);
+          $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh', 1, 3);
           try {
             $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh/config', $data_kwh);
           } catch (\Exception $e) {
-            $this->log('MQTT not yet ready, need to sleep on first run maybe', 1);
+            $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
           }
         }
         $data = '{
@@ -82,17 +82,17 @@ class mqtt extends json {
         "dev_cla": "'.$dev_cla.'",
         "exp_aft": 86400
         }';
-        $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name, 3);
+        $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name, 1, 3);
         try {
           $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'/config', $data);
         } catch (Exception $e) {
-          $this->log('MQTT not yet ready, need to sleep on first run maybe', 1);
+          $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
         }
       } //setup HA config for each device/entity
     } //for each device
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT1H"));
-    $this->log('Setup complete', 3);
+    $this->log('Setup complete', 1, 3);
     return $time->format('U');
   }
 

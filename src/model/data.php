@@ -1,5 +1,8 @@
 <?php
 
+// TODO: Get device list -> return (https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html#get20device20list0a3ca20id3dget20device20list4303e203ca3e)
+// TODO: process_data
+
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
@@ -16,111 +19,29 @@ class data extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 1);
+      $this->log('Missing config: '.  $e->getMessage(), 3, 1);
     }
   }
 
   /**
-   * Get the list of devices
-   **/
-  public function device_list(){
-    $this->log('start of device listing', 2);
-    $this->request = new request();
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
-    $data = '{"variables": ["pv1Power","pv2Power"]}';
-    $url ='/op/v0/device/real/query';
-    $headers = $this->request->get_signature($this->config->foxess_apikey, $url, 'en');
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers );
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt_array ( $curl , [
-      CURLOPT_URL => "https://www.foxesscloud.com$url",
-      CURLOPT_RETURNTRANSFER => true
-    ] );
-    $this_curl = curl_exec($curl);
-    var_dump($curl);
-    $this->log($this_curl, 4);
-    $return_data = json_decode($this_curl, true);
-    if($return_data['errno'] > 0){
-      return false;
-    }else{
-      $this->save_to_file('data/devices.json', $return_data);
-
-      $this->log('storing devices', 3);
-      $foxess_data['device_total'] = $return_data['result']['total'];
-      for( $device = 0; $device < $return_data['result']['total']; $device++ ){
-        if(!is_array($foxess_data['devices'][$device])){
-          $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
-          $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
-        }else{
-          $foxess_data['devices'][$device]['generationTotal'] = $return_data['result']['devices'][$device]['generationTotal'];
-          $foxess_data['devices'][$device]['generationToday'] = $return_data['result']['devices'][$device]['generationToday'];
-        }
-      }
-      $this->save_to_file('data/foxess_data.json', $foxess_data);
-      $this->log('all done', 3);
-      $this->variable_list();
-      return true;
-    }
-  }
-
-  /**
-   * get device variables
+   * Collect data from Foxess Cloud
    *
-   * Undocumented function long description
+   * use curl to collect the latest data from Foxes Cloud
    *
-   * @param type var Description
-   * @return return true
    */
-  public function variable_list(){
-    $this->log('start of variable listing', 2);
-    $this->login = new login();
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
-    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){//for each device
-      $curl = curl_init();
-      curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array(
-          'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 OPR/89.0.4447.83',
-          'Accept: application/json, text/plain, */*',
-          'lang: en',
-          'sec-ch-ua-platform: macOS',
-          'Sec-Fetch-Site: same-origin',
-          'Sec-Fetch-Mode: cors',
-          'Sec-Fetch-Dest: empty',
-          'Referer: https://www.foxesscloud.com/login?redirect=/',
-          'Accept-Language: en-US;q=0.9,en;q=0.8,de;q=0.7,nl;q=0.6',
-          'Connection: keep-alive',
-          'X-Requested-With: XMLHttpRequest',
-          "token: ".$foxess_data['token'],
-          "Content-Type: application/json"
-        )
-      );
-      curl_setopt_array ( $curl , [
-      CURLOPT_URL => "https://www.foxesscloud.com/c/v1/device/variables?deviceID=".$foxess_data['devices'][$device]['deviceID'],
-      CURLOPT_RETURNTRANSFER => true
-      ] );
-      $return_data = json_decode(curl_exec($curl), true);
-      if($return_data['errno'] > 0){
-        $this->log('error getting variables, file not saved', 3);
-        return false;
-      }else{
-        $this->save_to_file('data/'.$foxess_data['devices'][$device]['deviceSN'].'-variables.json', $return_data);
-        $variables = $return_data['result']['variables'];
-        $var_count = count($variables);
-        $this->log('storing variables', 3);
-        $foxess_data['devices'][$device]['variable_list'] = array();
-        for( $i = 0 ; $i < $var_count; $i++ ){
-          $foxess_data['devices'][$device]['variable_list'][$i] = $variables[$i]['variable'];
-          if(!isset($foxess_data['devices'][$device]['variables'][$variables[$i]['variable']])){
-            $foxess_data['devices'][$device]['variables'][$variables[$i]['variable']] = 0;
-          }
-        }
-      }
-    }
-    $this->save_to_file('data/foxess_data.json', $foxess_data);
-    $this->log('all done', 3);
-    return true;
+  public function collect_data($device) {
+    $this->log('Collect data from the cloud', 1, 3);
+    $deviceSN = $this->foxess_data['devices'][$device]['deviceSN'];
+    $data = '{
+        "sn": "'.$deviceSN.'",
+        "variables": '.json_encode($this->foxess_data['devices'][$device]['variable_list']).'
+    }';
+    $url ='/op/v0/device/real/query';
+    $this_curl = $this->request->sign_post($url, $data, $this->config->foxess_lang);
+    $return_data = json_decode(curl_exec($curl), true);
+    $this->save_to_file('data/'.$deviceSN.'_collected.json', $return_data);
+    $this->collected_data[$device] = $return_data;
+    $this->log('Data collected', 1, 3);
   }
 
   /**
@@ -132,14 +53,14 @@ class data extends json {
    */
   public function process_data($mqtt_topic, $foxess_data, $collected_data, $total_over_time)  {
     $this->mqtt  = new mqtt();
-    $this->log('Start of processing the data', 3);
+    $this->log('Start of processing the data', 1, 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
       $options_count = count($collected_data[$device]['result']);
       $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
       for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
         $option = $collected_data[$device]['result'][$i]['variable'];
         $name = $collected_data[$device]['result'][$i]['variable'];
-        $this->log($name);
+        $this->log($name,1,2);
         if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
            || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
            strstr($option, 'Temperation') !== false
@@ -156,7 +77,7 @@ class data extends json {
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $value);
             $foxess_data['devices'][$device]['variables'][$name] = $value;
             $this->save_to_file('data/foxess_data.json', $foxess_data);
-            $this->log('Post '.$value.' of '.$name.' to MQTT', 3);
+            $this->log('Post '.$value.' of '.$name.' to MQTT', 1, 3);
 
           }
         }else{
@@ -184,15 +105,15 @@ class data extends json {
             }
           }
           $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
-          $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 3);
+          $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1, 3);
 
           $foxess_data['devices'][$device]['variables'][$name] = $value_kwh;
           $this->save_to_file('data/foxess_data.json', $foxess_data);
           $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($value_kwh, 2)));
-          $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 3);
+          $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 1, 3);
         }
       }
-      $this->log('Data procssed and posted to MQTT', 3);
+      $this->log('Data procssed and posted to MQTT', 1, 3);
     } // device
   }
 }
