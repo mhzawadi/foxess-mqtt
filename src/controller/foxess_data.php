@@ -41,7 +41,7 @@ class foxess_data extends json {
     if( $this->device->list() === true ){
       $this->foxess_data = $this->load_from_file('data/foxess_data.json');
     }else{
-      $this->log('[ERROR] issues getting devices', 3, 2);
+      $this->log('issues getting devices', 3, 2);
     }
     if($this->foxess_data['setup'] < time()){
       $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
@@ -52,7 +52,7 @@ class foxess_data extends json {
     }
 
     $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);
-    $this->log("Work complete", 2);
+    $this->log("Work complete", 1, 2);
   }
 
 }
