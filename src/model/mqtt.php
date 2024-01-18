@@ -8,14 +8,8 @@ use MHorwood\foxess_mqtt\model\config;
 class mqtt extends json {
 
   protected $config;
-  public function __construct(){
-    try {
-      $this->config = new config();
-    } catch (Exception $e) {
-      $this->log('Missing config: '. $e->getMessage(), 3, 1);
-    }
-
-
+  public function __construct($config){
+    $this->config = $config;
   }
 
   /**
@@ -28,7 +22,7 @@ class mqtt extends json {
   public function setup_mqtt($foxess_data) {
     $this->log('Start of MQTT setup for HA', 1, 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //for each device
-      foreach($foxess_data['result'] as $name => $value){ //setup HA config for each device/entity
+      foreach($foxess_data['devices'][$device]['variable_list'] as $id => $name){ //setup HA config for each device/entity
         if(strstr($name, 'Temperature') !== false || strstr($name, 'Temperation') !== false ){
           $dev_cla = 'temperature';
           $unit = '°C';
@@ -44,28 +38,28 @@ class mqtt extends json {
         }else{
           $dev_cla = 'power';
           $unit = 'kW';
-          $data_kwh = '{
-            "name": "'.$name.'_kwh",
-            "device": {
-              "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-              "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
-              "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
-              "manufacturer": "FoxEss"
-            },
-            "stat_t": "~'.$name.'_kwh",
-            "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh",
-            "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
-            "unit_of_measurement": "kWh",
-            "dev_cla": "energy",
-            "state_class": "total_increasing",
-            "exp_aft": 86400
-          }';
-          $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh', 1, 3);
-          try {
-            $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh/config', $data_kwh);
-          } catch (\Exception $e) {
-            $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
-          }
+          // $data_kwh = '{
+          //   "name": "'.$name.'_kwh",
+          //   "device": {
+          //     "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
+          //     "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
+          //     "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
+          //     "manufacturer": "FoxEss"
+          //   },
+          //   "stat_t": "~'.$name.'_kwh",
+          //   "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh",
+          //   "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
+          //   "unit_of_measurement": "kWh",
+          //   "dev_cla": "energy",
+          //   "state_class": "total_increasing",
+          //   "exp_aft": 86400
+          // }';
+          // $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh', 1, 3);
+          // try {
+          //   $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh/config', $data_kwh);
+          // } catch (\Exception $e) {
+          //   $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+          // }
         }
         $data = '{
         "name": "'.$name.'",
@@ -91,7 +85,7 @@ class mqtt extends json {
       } //setup HA config for each device/entity
     } //for each device
     $date = new \DateTimeImmutable;
-    $time = $date->add(new \DateInterval("PT1H"));
+    $time = $date->add(new \DateInterval("PT6H"));
     $this->log('Setup complete', 1, 3);
     return $time->format('U');
   }

@@ -28,5 +28,5 @@ sleep 3
 while true
 do
   php run.php
-  sleep 180
+  sleep 60
 done

@@ -15,13 +15,9 @@ class device extends json {
   protected $mqtt;
   protected $request;
   protected $config;
-  public function __construct(){
-    try {
-      $this->config = new config();
-    } catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 1);
-    }
-    $this->request = new request();
+  public function __construct($config){
+    $this->config = $config;
+    $this->request = new request($config);
   }
 
   /**
@@ -45,7 +41,16 @@ class device extends json {
       CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
-    $this->save_to_file('data/error_codes.json', $return_data['result']['messages'][$this->config->foxess_lang]);
+    if(empty($return_data) ){
+      $this->log('Issue getting error codes', 3, 2);
+      return true;
+    }elseif($return_data['errno'] > 0 ){
+      $this->log($this->config->errno($return_data['errno']), 3, 2);
+      return true;
+    }else{
+      $this->save_to_file('data/error_codes.json', $return_data['result']['messages'][$this->config->foxess_lang]);
+      return false;
+    }
   }
 
   /**
@@ -69,16 +74,23 @@ class device extends json {
       return false;
     }else{
       $this->save_to_file('data/devices.json', $return_data);
-
       $this->log('storing devices', 1, 3);
       $foxess_data['device_total'] = $return_data['result']['total'];
-      for( $device = 0; $device < $return_data['result']['total']; $device++ ){
-        if(!is_array($foxess_data['devices'][$device])){
-          $foxess_data['devices'][$device] = $return_data['result']['devices'][$device];
+      if(empty($foxess_data['devices'])){ // new config
+        for( $device = 0; $device < $return_data['result']['total']; $device++ ){
+          $foxess_data['devices'][$device] = $return_data['result']['data'][$device];
           $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
-        }else{
-          $foxess_data['devices'][$device]['generationTotal'] = $return_data['result']['devices'][$device]['generationTotal'];
-          $foxess_data['devices'][$device]['generationToday'] = $return_data['result']['devices'][$device]['generationToday'];
+        }
+      }else{ // we have config, update it
+        for( $device = 0; $device < $return_data['result']['total']; $device++ ){
+          if(!is_array($foxess_data['devices'][$device])){
+            $foxess_data['devices'][$device] = $return_data['result']['data'][$device];
+            $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
+          }// Need to get total data
+          // else{
+          //   $foxess_data['devices'][$device]['generationTotal'] = $return_data['result']['devices'][$device]['generationTotal'];
+          //   $foxess_data['devices'][$device]['generationToday'] = $return_data['result']['devices'][$device]['generationToday'];
+          // }
         }
       }
       $this->save_to_file('data/foxess_data.json', $foxess_data);
@@ -97,31 +109,32 @@ class device extends json {
    * @return return true
    */
   public function variable_list(){
-    $this->log('start of variable listing', 2);
+    $this->log('Start of variable listing', 1, 2);
     $foxess_data = $this->load_from_file('data/foxess_data.json');
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){//for each device
       $url = '/op/v0/device/variable/get';
-      $return_data = $this->request->sign_get($url);
-      $return_data = json_decode(curl_exec($curl), true);
+      $this_curl = $this->request->sign_get($url);
+      $return_data = json_decode($this_curl, true);
       if($return_data['errno'] > 0){
-        $this->log('[ERROR] getting variables, file not saved', 3);
+        $this->log('Getting variables, file not saved', 3, 3);
         return false;
       }else{
         $this->save_to_file('data/'.$foxess_data['devices'][$device]['deviceSN'].'-variables.json', $return_data);
-        $variables = $return_data['result']['variables'];
+        $variables = $return_data['result'];
         $var_count = count($variables);
-        $this->log('storing variables', 3);
+        $this->log('Storing variables', 1, 3);
         $foxess_data['devices'][$device]['variable_list'] = array();
         for( $i = 0 ; $i < $var_count; $i++ ){
-          $foxess_data['devices'][$device]['variable_list'][$i] = $variables[$i]['variable'];
-          if(!isset($foxess_data['devices'][$device]['variables'][$variables[$i]['variable']])){
-            $foxess_data['devices'][$device]['variables'][$variables[$i]['variable']] = 0;
+          $name = array_keys($variables[$i]);
+          $foxess_data['devices'][$device]['variable_list'][$i] = $name[0];
+          if(!isset($foxess_data['devices'][$device]['variables'][$name[0]])){
+            $foxess_data['devices'][$device]['variables'][$name[0]] = 0;
           }
         }
       }
     }
     $this->save_to_file('data/foxess_data.json', $foxess_data);
-    $this->log('all done', 3);
+    $this->log('all done', 1,  3);
     return true;
   }
 }

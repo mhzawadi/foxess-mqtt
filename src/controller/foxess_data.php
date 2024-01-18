@@ -26,29 +26,34 @@ class foxess_data extends json {
   protected $config;
 
   public function __construct(){
-    $this->login = new login();
-    $this->data  = new data();
-    $this->device  = new device();
-    $this->mqtt  = new mqtt();
     try {
       $this->config = new config();
-      $this->device->get_error_codes();
     } catch (Exception $e) {
       $this->log('Missing config: '.$e->getMessage(), 3, 1);
+      exit(1);
+    }
+    $this->data  = new data($this->config);
+    $this->device  = new device($this->config);
+    $this->mqtt  = new mqtt($this->config);
+    $errors = $this->device->get_error_codes();
+    if ($errors){
+      $this->log('Issue with comms to FoxESS cloud', 3, 1);
+      exit(1);
     }
     $this->foxess_data = $this->load_from_file('data/foxess_data.json');
 
-    if( $this->device->list() === true ){
-      $this->foxess_data = $this->load_from_file('data/foxess_data.json');
-    }else{
-      $this->log('issues getting devices', 3, 2);
-    }
     if($this->foxess_data['setup'] < time()){
-      $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
+      $this->log('Update MQTT and device list', 1, 2);
+      if( $this->device->list() === true ){
+        $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
+        $this->save_to_file('data/foxess_data.json', $foxess_data);
+      }else{
+        $this->log('Issues getting devices', 3, 2);
+      }
     }
 
     for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
-      $this->collect_data($device);
+      $this->collected_data[$device] = $this->data->collect_data($this->foxess_data, $device);
     }
 
     $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);

@@ -8,12 +8,8 @@ use MHorwood\foxess_mqtt\model\config;
 class request extends json {
 
   protected $config;
-  public function __construct(){
-    try {
-      $this->config = new config();
-    } catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 3, 1);
-    }
+  public function __construct($config){
+    $this->config = $config;
   }
 
   /**
