@@ -6,7 +6,7 @@ class logger {
 
   /**
    * Log function
-   * Type: 1 INFO, 2 WARN, 3 ERROR
+   * Type: 0 debug, 1 INFO, 2 WARN, 3 ERROR
    **/
   protected function log($text, $type = 1, $level = 2){
 

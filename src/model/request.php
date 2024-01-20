@@ -8,6 +8,7 @@ use MHorwood\foxess_mqtt\model\config;
 class request extends json {
 
   protected $config;
+  protected $curl;
   public function __construct($config){
     $this->config = $config;
   }
@@ -47,15 +48,15 @@ class request extends json {
    */
   public function sign_post($path, $data, $lang) {
     $headers = $this->get_signature($path, $lang);
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers );
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt_array ( $curl , [
+    $this->curl = curl_init();
+    curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers );
+    curl_setopt($this->curl, CURLOPT_POST, 1);
+    curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt_array ( $this->curl , [
       CURLOPT_URL => "https://www.foxesscloud.com$path",
       CURLOPT_RETURNTRANSFER => true
     ] );
-    $this_curl = curl_exec($curl);
+    $this_curl = curl_exec($this->curl);
     return $this_curl;
   }
 
@@ -78,5 +79,27 @@ class request extends json {
     ] );
     $this_curl = curl_exec($curl);
     return $this_curl;
+  }
+
+  /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return return type
+   */
+  public function getinfo() {
+    if (!curl_errno($this->curl)) {
+      switch ($http_code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE)) {
+        case 200:  # OK
+          $isok = true;
+          break;
+        default:
+          $isok = false;
+          $this->log('Request failed: '.$http_code, 3, 2);
+      }
+    }
+    return $isok;
   }
 }

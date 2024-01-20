@@ -15,6 +15,7 @@ use MHorwood\foxess_mqtt\model\device;
 use MHorwood\foxess_mqtt\model\mqtt;
 use MHorwood\foxess_mqtt\model\login;
 use MHorwood\foxess_mqtt\model\config;
+use MHorwood\foxess_mqtt\model\mhredis;
 
 class foxess_data extends json {
 
@@ -32,27 +33,25 @@ class foxess_data extends json {
       $this->log('Missing config: '.$e->getMessage(), 3, 1);
       exit(1);
     }
-    $this->data  = new data($this->config);
-    $this->device  = new device($this->config);
-    $this->mqtt  = new mqtt($this->config);
-    $errors = $this->device->get_error_codes();
-    if ($errors){
-      $this->log('Issue with comms to FoxESS cloud', 3, 1);
-      exit(1);
-    }
-    $this->foxess_data = $this->load_from_file('data/foxess_data.json');
+    $this->data   = new data($this->config);
+    $this->device = new device($this->config);
+    $this->mqtt   = new mqtt($this->config);
+    $this->redis  = new mhredis($this->config);
+    $this->foxess_data = $this->redis->get('foxess_data');
+    // $errors = $this->device->get_error_codes();
 
-    if($this->foxess_data['setup'] < time()){
+    if( $this->foxess_data['setup'] < time() ){
       $this->log('Update MQTT and device list', 1, 2);
       if( $this->device->list() === true ){
+        $this->foxess_data = $this->redis->get('foxess_data');
         $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
-        $this->save_to_file('data/foxess_data.json', $foxess_data);
+        $this->redis->set('foxess_data', $this->foxess_data);
       }else{
         $this->log('Issues getting devices', 3, 2);
       }
     }
 
-    for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){//for each device
+    for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){ //for each device
       $this->collected_data[$device] = $this->data->collect_data($this->foxess_data, $device);
     }
 

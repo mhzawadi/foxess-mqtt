@@ -29,7 +29,7 @@ class json extends logger {
       $fp = fopen($filename, 'w');
       fwrite($fp, json_encode($json, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
       fclose($fp);
-      usleep(5000);
+      sleep(1);
       return true;
     } catch (\Exception $e) {
       $this->log('Issues saving file: '.$e->getMessage(), 1);

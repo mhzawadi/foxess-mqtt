@@ -25,6 +25,12 @@ class config extends json {
   public function __construct(){
     try {
       $config = $this->load_from_file('data/config.json');
+      if( $this->foxess_username === 'changeme' &&
+          $this->foxess_password === 'changeme' &&
+          $this->foxess_apikey === 'changeme' ){
+          throw new Exception('default config found');
+      }
+
       $this->foxess_username = $config['foxess_username'];
       $this->foxess_password = $config['foxess_password'];
       $this->foxess_apikey = $config['foxess_apikey'];
@@ -33,6 +39,8 @@ class config extends json {
       $this->mqtt_port = $config['mqtt_port'];
       $this->mqtt_user = $config['mqtt_user'];
       $this->mqtt_pass = $config['mqtt_pass'];
+      $this->redis_server = $config['redis_server'];
+      $this->redis_port = $config['redis_port'];
       if(!defined('log_level') && isset($config['log_level'])){
         define('log_level', $config['log_level']);
       }elseif(!defined('log_level') && getenv('LOG_LEVEL') !== false){
@@ -56,12 +64,6 @@ class config extends json {
         $this->foxess_lang = $config['foxess_lang'];
       }else{
         $this->foxess_lang = 'en';
-      }
-
-      if( $this->foxess_username === 'changeme' &&
-          $this->foxess_password === 'changeme' &&
-          $this->foxess_apikey === 'changeme' ){
-          throw new Exception('default config found');
       }
 
     } catch (Exception $e) {

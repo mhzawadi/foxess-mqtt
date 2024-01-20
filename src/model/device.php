@@ -18,6 +18,8 @@ class device extends json {
   public function __construct($config){
     $this->config = $config;
     $this->request = new request($config);
+    $this->redis   = new mhredis($config);
+
   }
 
   /**
@@ -41,6 +43,7 @@ class device extends json {
       CURLOPT_RETURNTRANSFER => true
     ] );
     $return_data = json_decode(curl_exec($curl), true);
+    curl_close($curl);
     if(empty($return_data) ){
       $this->log('Issue getting error codes', 3, 2);
       return true;
@@ -48,7 +51,7 @@ class device extends json {
       $this->log($this->config->errno($return_data['errno']), 3, 2);
       return true;
     }else{
-      $this->save_to_file('data/error_codes.json', $return_data['result']['messages'][$this->config->foxess_lang]);
+      $this->redis->set('error_codes', $return_data['result']['messages'][$this->config->foxess_lang]);
       return false;
     }
   }
@@ -58,7 +61,7 @@ class device extends json {
    **/
   public function list(){
     $this->log('start of device listing', 1, 2);
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
+    $foxess_data = $this->redis->get('foxess_data');
     $data = '{"pageSize": 10, "currentPage": 1}';
     $url ='/op/v0/device/list';
 
@@ -69,34 +72,35 @@ class device extends json {
     }
 
     $return_data = json_decode($this_curl, true);
+    $this->request->getinfo();
     if($return_data['errno'] > 0 ){
       $this->log($this->config->errno($return_data['errno']), 3, 2);
       return false;
     }else{
-      $this->save_to_file('data/devices.json', $return_data);
+      $this->redis->set('devices', $return_data);
       $this->log('storing devices', 1, 3);
       $foxess_data['device_total'] = $return_data['result']['total'];
       if(empty($foxess_data['devices'])){ // new config
+        $this->log('New config time', 1, 3);
         for( $device = 0; $device < $return_data['result']['total']; $device++ ){
           $foxess_data['devices'][$device] = $return_data['result']['data'][$device];
-          $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
         }
       }else{ // we have config, update it
+        $this->log('Update config time', 1, 3);
         for( $device = 0; $device < $return_data['result']['total']; $device++ ){
           if(!is_array($foxess_data['devices'][$device])){
             $foxess_data['devices'][$device] = $return_data['result']['data'][$device];
-            $foxess_data['devices'][$device]['variables'] = $foxess_data['result'];
-          }// Need to get total data
-          // else{
-          //   $foxess_data['devices'][$device]['generationTotal'] = $return_data['result']['devices'][$device]['generationTotal'];
-          //   $foxess_data['devices'][$device]['generationToday'] = $return_data['result']['devices'][$device]['generationToday'];
-          // }
+          }
         }
       }
-      $this->save_to_file('data/foxess_data.json', $foxess_data);
-      $this->log('all done', 1, 3);
-      $this->variable_list();
-      return true;
+      if($this->redis->set('foxess_data', $foxess_data)){
+        $this->log('Device list done', 1, 3);
+        $this->variable_list();
+        return true;
+      }else{
+        $this->log('Redis didnt save', 1, 3);
+        return false;
+      }
     }
   }
 
@@ -110,7 +114,7 @@ class device extends json {
    */
   public function variable_list(){
     $this->log('Start of variable listing', 1, 2);
-    $foxess_data = $this->load_from_file('data/foxess_data.json');
+    $foxess_data = $this->redis->get('foxess_data');
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){//for each device
       $url = '/op/v0/device/variable/get';
       $this_curl = $this->request->sign_get($url);
@@ -119,7 +123,7 @@ class device extends json {
         $this->log('Getting variables, file not saved', 3, 3);
         return false;
       }else{
-        $this->save_to_file('data/'.$foxess_data['devices'][$device]['deviceSN'].'-variables.json', $return_data);
+        $this->redis->set($foxess_data['devices'][$device]['deviceSN'].'-variables', $return_data);
         $variables = $return_data['result'];
         $var_count = count($variables);
         $this->log('Storing variables', 1, 3);
@@ -133,8 +137,12 @@ class device extends json {
         }
       }
     }
-    $this->save_to_file('data/foxess_data.json', $foxess_data);
-    $this->log('all done', 1,  3);
-    return true;
+    if($this->redis->set('foxess_data', $foxess_data)){
+      $this->log('all done', 1,  3);
+      return true;
+    }else{
+      $this->log('Redis didnt save', 1, 3);
+      return false;
+    }
   }
 }

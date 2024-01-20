@@ -3,6 +3,7 @@ version: "2.1"
 volumes:
   mosquitto_data:
   mosquitto_logs:
+  redis_data:
 
 services:
   mosquitto:
@@ -20,7 +21,19 @@ services:
     image: mhzawadi/foxess-mqtt:dev-php
     container_name: foxess-mqtt
     volumes:
+      - /Users/matt/git/foxess-mqtt:/foxess-mqtt
       - /Users/matt/data/foxess:/foxess-mqtt/data
     environment:
       - TIMEZONE=Europe/London
     command: ["/usr/bin/php", "run.php"]
+    depends_on:
+      - redis
+      - mosquitto
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379

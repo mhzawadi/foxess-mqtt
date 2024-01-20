@@ -18,6 +18,8 @@ class data extends json {
   public function __construct($config){
     $this->config = $config;
     $this->request = new request($config);
+    $this->mqtt  = new mqtt($config);
+    $this->redis   = new mhredis($config);
   }
 
   /**
@@ -35,6 +37,9 @@ class data extends json {
     }';
     $url ='/op/v0/device/real/query';
     $this_curl = $this->request->sign_post($url, $data, $this->config->foxess_lang);
+    if($this->request->getinfo() === false){
+      return false;
+    }
     $return_data = json_decode($this_curl, true);
     if(empty($this_curl) ){
       $this->log('Issue getting error codes', 3, 2);
@@ -43,7 +48,7 @@ class data extends json {
       $this->log($this->config->errno($return_data['errno']), 3, 2);
       return false;
     }else{
-      $this->save_to_file('data/'.$deviceSN.'_collected.json', $return_data);
+      $this->redis->set($deviceSN.'_collected', $return_data);
       $collected_data = $return_data;
       $this->log('Data collected', 1, 3);
       return $collected_data;
@@ -58,7 +63,6 @@ class data extends json {
    * @return return type
    */
   public function process_data($mqtt_topic, $foxess_data, $collected_data, $total_over_time)  {
-    $this->mqtt  = new mqtt();
     $this->log('Start of processing the data', 1, 3);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
       $options_count = count($collected_data[$device]['result'][0]['datas']);
@@ -74,10 +78,14 @@ class data extends json {
           if($collected_data[$device]['result'] == 'null'){
             $value = 0;
           }else{
-            $value = abs($collected_data[$device]['result'][0]['datas'][$i]['value']);
+            if(isset($collected_data[$device]['result'][0]['datas'][$i]['value'])){
+              $value = abs($collected_data[$device]['result'][0]['datas'][$i]['value']);
+            }else{
+              $value = 0;
+            }
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $value);
             $foxess_data['devices'][$device]['variables'][$name] = $value;
-            $this->save_to_file('data/foxess_data.json', $foxess_data);
+            $this->redis->set('foxess_data', $foxess_data);
             $this->log('Post '.$value.' of '.$name.' to MQTT', 1, 3);
 
           }
@@ -127,7 +135,11 @@ class data extends json {
           }else{
             $data = $collected_data[$device]['result'][0]['datas'][$i];
             $name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
-            $value_kw = $data['value'];
+            if(isset($data['value'])){
+              $value_kw = $data['value'];
+            }else{
+              $value_kw = 0;
+            }
             // if(strstr($option, 'generationPower') !== false){ //Returns false or int
             //   $value_kwh = $total_over_time ? $foxess_data['devices'][$device]['generationTotal'] : $foxess_data['devices'][$device]['variables'][$i];
             // }else{
@@ -139,7 +151,7 @@ class data extends json {
           $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1, 3);
 
           $foxess_data['devices'][$device]['variables'][$name] = $value_kw;
-          $this->save_to_file('data/foxess_data.json', $foxess_data);
+          $this->redis->set('foxess_data', $foxess_data);
           // $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($value_kwh, 2)));
           // $this->log('Post '.$value_kwh.'kwh of '.$name.' to MQTT', 1, 3);
         }
