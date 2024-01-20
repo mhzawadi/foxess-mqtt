@@ -25,27 +25,39 @@ class mqtt extends json {
     switch($option_unit){
       case '°C':
         $dev_cla = 'temperature';
+        $state_cla = 'measurement';
         break;
       case '%':
         $dev_cla = 'power_factor';
+        $state_cla = 'measurement';
         break;
       case 'V':
         $dev_cla = 'voltage';
+        $state_cla = 'measurement';
         break;
       case 'A':
         $dev_cla = 'current';
+        $state_cla = 'measurement';
         break;
       case 'kW':
         $dev_cla = 'power';
+        if(strstr($option_name, 'todayYield') !== false){
+          $state_cla = 'total_increasing';
+        }else{
+          $state_cla = 'measurement';
+        }
         break;
       case 'kWh':
         $dev_cla = 'energy';
+        $state_cla = 'total';
         break;
       case 'Hz':
         $dev_cla = 'frequency';
+        $state_cla = 'measurement';
         break;
       case 'kVar':
         $dev_cla = 'reactive_power';
+        $state_cla = 'measurement';
         break;
       default:
         $dev_cla = '';
@@ -66,7 +78,8 @@ class mqtt extends json {
     "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
     "unit_of_measurement": "'.$option_unit.'",
     "dev_cla": "'.$dev_cla.'",
-    "exp_aft": 86400
+    "exp_aft": 86400,
+    "state_class": "'.$state_cla.'"
     }';
     $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1, 3);
     try {
