@@ -19,75 +19,61 @@ class mqtt extends json {
    *
    * @return return type
    */
-  public function setup_mqtt($foxess_data) {
+  public function setup_mqtt($deviceSN, $deviceType, $option_name, $option_unit) {
     $this->log('Start of MQTT setup for HA', 1, 3);
-    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //for each device
-      foreach($foxess_data['devices'][$device]['variable_list'] as $id => $name){ //setup HA config for each device/entity
-        if(strstr($name, 'Temperature') !== false || strstr($name, 'Temperation') !== false ){
-          $dev_cla = 'temperature';
-          $unit = '°C';
-        }elseif(strstr($name, 'SoC') !== false){
-          $dev_cla = 'power_factor';
-          $unit = '%';
-        }elseif(strstr($name, 'Volt') !== false){
-          $dev_cla = 'voltage';
-          $unit = 'V';
-        }elseif(strstr($name, 'Current') !== false){
-          $dev_cla = 'current';
-          $unit = 'A';
-        }else{
-          $dev_cla = 'power';
-          $unit = 'kW';
-          // $data_kwh = '{
-          //   "name": "'.$name.'_kwh",
-          //   "device": {
-          //     "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-          //     "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
-          //     "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
-          //     "manufacturer": "FoxEss"
-          //   },
-          //   "stat_t": "~'.$name.'_kwh",
-          //   "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh",
-          //   "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
-          //   "unit_of_measurement": "kWh",
-          //   "dev_cla": "energy",
-          //   "state_class": "total_increasing",
-          //   "exp_aft": 86400
-          // }';
-          // $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh', 1, 3);
-          // try {
-          //   $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'_kwh/config', $data_kwh);
-          // } catch (\Exception $e) {
-          //   $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
-          // }
-        }
-        $data = '{
-        "name": "'.$name.'",
-        "device": {
-          "identifiers": "'.$foxess_data['devices'][$device]['deviceSN'].'",
-          "name": "'.$this->config->mqtt_topic.'-'.$foxess_data['devices'][$device]['deviceSN'].'",
-          "model": "'.$foxess_data['devices'][$device]['deviceType'].'",
-          "manufacturer": "FoxEss"
-        },
-        "stat_t": "~'.$name.'",
-        "uniq_id": "'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'",
-        "~": "'.$this->config->mqtt_topic.'/'.$foxess_data['devices'][$device]['deviceSN'].'/",
-        "unit_of_measurement": "'.$unit.'",
-        "dev_cla": "'.$dev_cla.'",
-        "exp_aft": 86400
-        }';
-        $this->log('Post to MQTT '.$foxess_data['devices'][$device]['deviceSN'].'-'.$name, 1, 3);
-        try {
-          $this->post_mqtt('homeassistant/sensor/'.$foxess_data['devices'][$device]['deviceSN'].'-'.$name.'/config', $data);
-        } catch (Exception $e) {
-          $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
-        }
-      } //setup HA config for each device/entity
-    } //for each device
-    $date = new \DateTimeImmutable;
-    $time = $date->add(new \DateInterval("PT6H"));
-    $this->log('Setup complete', 1, 3);
-    return $time->format('U');
+    $this->log($option_unit, 1, 3);
+    switch($option_unit){
+      case '°C':
+        $dev_cla = 'temperature';
+        break;
+      case '%':
+        $dev_cla = 'power_factor';
+        break;
+      case 'V':
+        $dev_cla = 'voltage';
+        break;
+      case 'A':
+        $dev_cla = 'current';
+        break;
+      case 'kW':
+        $dev_cla = 'power';
+        break;
+      case 'kWh':
+        $dev_cla = 'energy';
+        break;
+      case 'Hz':
+        $dev_cla = 'frequency';
+        break;
+      case 'kVar':
+        $dev_cla = 'reactive_power';
+        break;
+      default:
+        $dev_cla = '';
+        $option_unit = null;
+        break;
+    }
+
+    $data = '{
+    "name": "'.$option_name.'",
+    "device": {
+      "identifiers": "'.$deviceSN.'",
+      "name": "'.$this->config->mqtt_topic.'-'.$deviceSN.'",
+      "model": "'.$deviceType.'",
+      "manufacturer": "FoxEss"
+    },
+    "stat_t": "~'.$option_name.'",
+    "uniq_id": "'.$deviceSN.'-'.$option_name.'",
+    "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
+    "unit_of_measurement": "'.$option_unit.'",
+    "dev_cla": "'.$dev_cla.'",
+    "exp_aft": 86400
+    }';
+    $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1, 3);
+    try {
+      $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data);
+    } catch (Exception $e) {
+      $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+    }
   }
 
   /**

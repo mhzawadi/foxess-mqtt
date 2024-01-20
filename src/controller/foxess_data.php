@@ -44,7 +44,7 @@ class foxess_data extends json {
       $this->log('Update MQTT and device list', 1, 2);
       if( $this->device->list() === true ){
         $this->foxess_data = $this->redis->get('foxess_data');
-        $this->foxess_data['setup'] = $this->mqtt->setup_mqtt($this->foxess_data);
+        $this->foxess_data['setup'] = $this->config->timestamp();
         $this->redis->set('foxess_data', $this->foxess_data);
       }else{
         $this->log('Issues getting devices', 3, 2);

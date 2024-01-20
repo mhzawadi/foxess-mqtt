@@ -19,6 +19,7 @@ class device extends json {
     $this->config = $config;
     $this->request = new request($config);
     $this->redis   = new mhredis($config);
+    $this->mqtt  = new mqtt($config);
 
   }
 
@@ -131,6 +132,11 @@ class device extends json {
         for( $i = 0 ; $i < $var_count; $i++ ){
           $name = array_keys($variables[$i]);
           $foxess_data['devices'][$device]['variable_list'][$i] = $name[0];
+          if(isset($variables[$i][$name[0]]['unit'])){
+            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name[0], $variables[$i][$name[0]]['unit']);
+          }else{
+            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name[0], null);
+          }
           if(!isset($foxess_data['devices'][$device]['variables'][$name[0]])){
             $foxess_data['devices'][$device]['variables'][$name[0]] = 0;
           }

@@ -84,4 +84,20 @@ class config extends json {
     $errors = $this->load_from_file('data/error_codes.json');
     return $errors[$errno];
   }
+
+  /**
+   * undocumented function summary
+   *
+   * Undocumented function long description
+   *
+   * @param type var Description
+   * @return return type
+   */
+  public function timestamp()
+  {
+    $date = new \DateTimeImmutable;
+    $time = $date->add(new \DateInterval("PT6H"));
+    $this->log('Setup complete', 1, 3);
+    return $time->format('U');
+  }
 }
