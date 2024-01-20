@@ -22,29 +22,24 @@ class mqtt extends json {
   public function setup_mqtt($deviceSN, $deviceType, $option_name, $option_unit) {
     $this->log('Start of MQTT setup for HA', 1, 3);
     $this->log($option_unit, 1, 3);
+    $state_cla = 'measurement';
     switch($option_unit){
       case '°C':
         $dev_cla = 'temperature';
-        $state_cla = 'measurement';
         break;
       case '%':
         $dev_cla = 'power_factor';
-        $state_cla = 'measurement';
         break;
       case 'V':
         $dev_cla = 'voltage';
-        $state_cla = 'measurement';
         break;
       case 'A':
         $dev_cla = 'current';
-        $state_cla = 'measurement';
         break;
       case 'kW':
         $dev_cla = 'power';
         if(strstr($option_name, 'todayYield') !== false){
           $state_cla = 'total_increasing';
-        }else{
-          $state_cla = 'measurement';
         }
         break;
       case 'kWh':
@@ -53,11 +48,9 @@ class mqtt extends json {
         break;
       case 'Hz':
         $dev_cla = 'frequency';
-        $state_cla = 'measurement';
         break;
       case 'kVar':
         $dev_cla = 'reactive_power';
-        $state_cla = 'measurement';
         break;
       default:
         $dev_cla = '';
