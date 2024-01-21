@@ -99,6 +99,8 @@ class request extends json {
           $isok = false;
           $this->log('Request failed: '.$http_code, 3, 2);
       }
+    }else{
+      $isok = false;
     }
     return $isok;
   }

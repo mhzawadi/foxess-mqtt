@@ -120,7 +120,10 @@ class device extends json {
       $url = '/op/v0/device/variable/get';
       $this_curl = $this->request->sign_get($url);
       $return_data = json_decode($this_curl, true);
-      if($return_data['errno'] > 0){
+      if(empty($this_curl) ){
+        $this->log('Issue getting data', 3, 2);
+        return false;
+      }elseif($return_data['errno'] > 0){
         $this->log('Getting variables, file not saved', 3, 3);
         return false;
       }else{
@@ -131,14 +134,29 @@ class device extends json {
         $foxess_data['devices'][$device]['variable_list'] = array();
         for( $i = 0 ; $i < $var_count; $i++ ){
           $name = array_keys($variables[$i]);
-          $foxess_data['devices'][$device]['variable_list'][$i] = $name[0];
-          if(isset($variables[$i][$name[0]]['unit'])){
-            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name[0], $variables[$i][$name[0]]['unit']);
+          $variable_name = $name[0];
+          $foxess_data['devices'][$device]['variable_list'][$i] = $variable_name;
+          if(isset($variables[$i][$variable_name]['unit'])){
+            switch($variable_name){
+              case 'feedinPower':
+                $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name.'_kwh', 'kWh');
+                if(!isset($foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'])){
+                  $foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'] = 0;
+                }
+                break;
+              case 'gridConsumptionPower':
+                $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name.'_kwh', 'kWh');
+                if(!isset($foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'])){
+                  $foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'] = 0;
+                }
+                break;
+              }
+              $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name, $variables[$i][$variable_name]['unit']);
           }else{
-            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name[0], null);
+            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name, null);
           }
-          if(!isset($foxess_data['devices'][$device]['variables'][$name[0]])){
-            $foxess_data['devices'][$device]['variables'][$name[0]] = 0;
+          if(!isset($foxess_data['devices'][$device]['variables'][$variable_name])){
+            $foxess_data['devices'][$device]['variables'][$variable_name] = 0;
           }
         }
       }
