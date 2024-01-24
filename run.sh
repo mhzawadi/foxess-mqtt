@@ -12,13 +12,8 @@ fi
 if [ ! -f /foxess-mqtt/data/config.json ]
 then
   cp /foxess-mqtt/template/config.json /foxess-mqtt/data/config.json
-  cp /foxess-mqtt/template/foxess_data.json /foxess-mqtt/data/foxess_data.json
   echo 'Please update to config.json file'
   exit 1;
-elif [[ ! -f /foxess-mqtt/data/foxess_data.json ]]
-then
-  echo "missing data store"
-  cp /foxess-mqtt/template/foxess_data.json /foxess-mqtt/data/foxess_data.json
 else
   echo "We have all the files we need"
 fi
@@ -28,5 +23,5 @@ sleep 3
 while true
 do
   php run.php
-  sleep 180
+  sleep 60
 done

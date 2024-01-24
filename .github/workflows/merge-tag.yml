@@ -1,0 +1,26 @@
+name: "Tag post merge"
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - "main"
+
+jobs:
+  build:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/v${{ github.head_ref }}",
+              sha: context.sha
+            })
+

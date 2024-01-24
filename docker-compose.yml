@@ -1,5 +1,10 @@
 version: "2.1"
 
+volumes:
+  mosquitto_data:
+  mosquitto_logs:
+  redis_data:
+
 services:
   mosquitto:
     image: eclipse-mosquitto
@@ -7,8 +12,12 @@ services:
     volumes:
       - /Users/matt/git/foxess-mqtt/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - /Users/matt/git/foxess-mqtt/mqtt/users.txt:/mosquitto/data/users.txt
-    ports:
-      - 1883:1883
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      - redis_data:/data
 
   foxess-mqtt:
     image: mhzawadi/foxess-mqtt:dev-php

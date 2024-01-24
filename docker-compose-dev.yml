@@ -1,5 +1,10 @@
 version: "2.1"
 
+volumes:
+  mosquitto_data:
+  mosquitto_logs:
+  redis_data:
+
 services:
   mosquitto:
     image: eclipse-mosquitto
@@ -7,6 +12,8 @@ services:
     volumes:
       - /Users/matt/git/foxess-mqtt/mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - /Users/matt/git/foxess-mqtt/mqtt/users.txt:/mosquitto/data/users.txt
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_data:/mosquitto/logs
     ports:
       - 1883:1883
 
@@ -14,7 +21,19 @@ services:
     image: mhzawadi/foxess-mqtt:dev-php
     container_name: foxess-mqtt
     volumes:
+      - /Users/matt/git/foxess-mqtt:/foxess-mqtt
       - /Users/matt/data/foxess:/foxess-mqtt/data
     environment:
       - TIMEZONE=Europe/London
     command: ["/usr/bin/php", "run.php"]
+    depends_on:
+      - redis
+      - mosquitto
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
