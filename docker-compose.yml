@@ -20,7 +20,7 @@ services:
       - redis_data:/data
 
   foxess-mqtt:
-    image: mhzawadi/foxess-mqtt:dev-php
+    image: mhzawadi/foxess-mqtt:latest
     container_name: foxess-mqtt
     volumes:
       - /Users/matt/data/foxess:/foxess-mqtt/data
