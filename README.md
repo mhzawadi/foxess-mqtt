@@ -85,7 +85,7 @@ services:
       - redis_data:/data
 
   foxess-mqtt:
-    image: mhzawadi/foxess-mqtt:dev-php
+    image: mhzawadi/foxess-mqtt
     container_name: foxess-mqtt
     volumes:
       - ./config.json:/foxess-mqtt/data/config.json
