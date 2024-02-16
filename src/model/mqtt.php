@@ -95,7 +95,6 @@ class mqtt extends json {
    * @return return type
    */
   public function post_mqtt($topic, $data, bool $retain = false) {
-    var_dump($retain);
     $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
       // The username used for authentication when connecting to the broker.
       ->setUsername($this->config->mqtt_user)
