@@ -13,9 +13,15 @@ class json extends logger {
       $handle = fopen($filename, "r");
       $json = json_decode(fread($handle, filesize($filename)), $array);
       fclose($handle);
-      return $json;
+      $error = json_last_error();
+      if($error === JSON_ERROR_NONE){
+        return $json;
+      }else{
+        throw new Exception('Syntax error, malformed JSON');
+      }
+
     } catch (Exception $e) {
-      $this->log('Issues opening file: '.$e->getMessage(), 1);
+      $this->log('Issues opening file: '.$e->getMessage(), 3);
       return false;
     }
 
@@ -32,7 +38,7 @@ class json extends logger {
       sleep(1);
       return true;
     } catch (\Exception $e) {
-      $this->log('Issues saving file: '.$e->getMessage(), 1);
+      $this->log('Issues saving file: '.$e->getMessage(), 3);
       return false;
     }
   }

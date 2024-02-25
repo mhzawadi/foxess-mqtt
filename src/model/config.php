@@ -1,13 +1,8 @@
 <?php
 
-// TODO: Make sure we have an API KEY [x]
-// TODO: Fail out if not [x]
-
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
-
-class Exception extends \Exception {}
 
 class config extends json {
 
@@ -24,15 +19,12 @@ class config extends json {
 
   public function __construct(){
     try {
-      $config = $this->load_from_file('data/config.json');
-      if( $this->foxess_username === 'changeme' &&
-          $this->foxess_password === 'changeme' &&
-          $this->foxess_apikey === 'changeme' ){
+      $config = $this->load_from_file('data/config.json')
+        or exit(date('Y-m-d H:i:s').' [ERROR] unable to start');
+      if( $this->foxess_apikey === 'changeme' ){
           throw new Exception('default config found');
       }
 
-      $this->foxess_username = $config['foxess_username'];
-      $this->foxess_password = $config['foxess_password'];
       $this->foxess_apikey = $config['foxess_apikey'];
       $this->device_id = $config['device_id'];
       $this->mqtt_host = $config['mqtt_host'];
@@ -49,13 +41,13 @@ class config extends json {
         define('log_level', 2);
       }
       if(isset($config['mqtt_topic'])){
-        $this->log('Using MQTT topic: '.$config['mqtt_topic'], 1, 3);
+        $this->log('Using MQTT topic: '.$config['mqtt_topic'], 1);
         $this->mqtt_topic = $config['mqtt_topic'];
       }else{
         $this->mqtt_topic = 'foxesscloud';
       }
       if(isset($config['total_over_time'])){
-        $this->log('total over time is: '.var_export($config['total_over_time'], true), 1, 3);
+        $this->log('total over time is: '.var_export($config['total_over_time'], true), 1);
         $this->total_over_time = $config['total_over_time'];
       }else{
         $this->total_over_time = 'true';
@@ -67,7 +59,7 @@ class config extends json {
       }
 
     } catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 3, 1);
+      $this->log('Missing config: '.  $e->getMessage(), 3);
     }
   }
 
@@ -97,7 +89,7 @@ class config extends json {
   {
     $date = new \DateTimeImmutable;
     $time = $date->add(new \DateInterval("PT6H"));
-    $this->log('Setup complete', 1, 3);
+    $this->log('Setup complete', 1);
     return $time->format('U');
   }
 }

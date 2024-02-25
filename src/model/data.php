@@ -1,8 +1,5 @@
 <?php
 
-// TODO: Get device list -> return (https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html#get20device20list0a3ca20id3dget20device20list4303e203ca3e)
-// TODO: process_data
-
 namespace MHorwood\foxess_mqtt\model;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
@@ -29,7 +26,7 @@ class data extends json {
    *
    */
   public function collect_data($foxess_data, $device) {
-    $this->log('Collect data from the cloud', 1, 3);
+    $this->log('Collect data from the cloud', 1);
     $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
     $data = '{
         "sn": "'.$deviceSN.'",
@@ -42,15 +39,15 @@ class data extends json {
     }
     $return_data = json_decode($this_curl, true);
     if(empty($this_curl) ){
-      $this->log('Issue getting data', 3, 2);
+      $this->log('Issue getting data', 3);
       return false;
     }elseif($return_data['errno'] > 0 ){
-      $this->log($this->config->errno($return_data['errno']), 3, 2);
+      $this->log($this->config->errno($return_data['errno']), 3);
       return false;
     }else{
       $this->redis->set($deviceSN.'_collected', $return_data);
       $collected_data = $return_data;
-      $this->log('Data collected', 1, 3);
+      $this->log('Data collected', 1);
       return $collected_data;
     }
   }
@@ -63,10 +60,10 @@ class data extends json {
    * @return return type
    */
   public function process_data($mqtt_topic, $foxess_data, $collected_data, $total_over_time)  {
-    $this->log('Start of processing the data', 1, 3);
+    $this->log('Start of processing the data', 1);
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
       if(empty($collected_data[$device])){ // Did we get any data
-        $this->log('Data from the cloud is empty', 3, 2);
+        $this->log('Data from the cloud is empty', 3);
       }else{ // Yes we did
         $options_count = count($collected_data[$device]['result'][0]['datas']);
         $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
@@ -89,7 +86,7 @@ class data extends json {
               $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $value);
               $foxess_data['devices'][$device]['variables'][$name] = $value;
               $this->redis->set('foxess_data', $foxess_data);
-              $this->log('Post '.$value.' of '.$name.' to MQTT', 1, 3);
+              $this->log('Post '.$value.' of '.$name.' to MQTT', 1);
 
             }
           }elseif(strstr($option, 'runningState') !== false){ // only runningState
@@ -130,7 +127,7 @@ class data extends json {
                 break;
             }
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
-            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1, 3);
+            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }else{ // KW/KWh
             if($collected_data[$device]['result'] == 'null'){
               $value_kw = 0;
@@ -148,23 +145,23 @@ class data extends json {
                   $sum = ($data['value']*0.01);// convert to KWh/min
                   $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $sum;
                   $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($sum, 2)));
-                  $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1, 3);
+                  $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1);
                   break;
                 case 'gridConsumptionPower': // import
                   $sum = ($data['value']*0.01);// convert to KWh/min
                   $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $sum;
                   $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($sum, 2)));
-                  $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1, 3);
+                  $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1);
                   break;
               }
             }
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
-            $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1, 3);
+            $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1);
             $foxess_data['devices'][$device]['variables'][$name] = $value_kw;
             $this->redis->set('foxess_data', $foxess_data);
           }
         }
-        $this->log('Data procssed and posted to MQTT', 1, 3);
+        $this->log('Data procssed and posted to MQTT', 1);
       } // check for data end
     } // device end
   }

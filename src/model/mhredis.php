@@ -27,11 +27,11 @@ class mhredis extends json {
       // $redis->auth('password');
 
       if(!$this->redis->exists('foxess_data')){
-        $this->log('Build default config', 1, 3);
+        $this->log('Build default config', 1);
         $this->redis->set('foxess_data', $this->load_from_file('template/foxess_data.json'));
       }
     }catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 3, 1);
+      $this->log('Missing config: '.  $e->getMessage(), 3);
     }
   }
 
@@ -47,7 +47,7 @@ class mhredis extends json {
     try{
       return $this->redis->set($key, $value);
     }catch (Exception $e) {
-      $this->log('Missing config: '.  $e->getMessage(), 3, 1);
+      $this->log('Missing config: '.  $e->getMessage(), 3);
     }
   }
 
@@ -64,10 +64,10 @@ class mhredis extends json {
       if($this->redis->exists($key)){
         return $this->redis->get($key);
       }else{
-        $this->log('Missing Key: '.  $key, 3, 1);
+        $this->log('Missing Key: '.  $key, 3);
       }
     }catch (Exception $e) {
-      $this->log($e->getMessage(), 3, 1);
+      $this->log($e->getMessage(), 3);
     }
   }
 }

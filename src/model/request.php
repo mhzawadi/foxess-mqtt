@@ -97,7 +97,7 @@ class request extends json {
           break;
         default:
           $isok = false;
-          $this->log('Request failed: '.$http_code, 3, 2);
+          $this->log('Request failed: '.$http_code, 3);
       }
     }else{
       $isok = false;
