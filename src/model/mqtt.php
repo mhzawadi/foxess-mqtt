@@ -60,6 +60,12 @@ class mqtt extends json {
         break;
     }
 
+    # Hack to get Temperature to work
+    if(strstr($option_name, 'Temperature') !== false || strstr($option_name, 'Temperation') !== false ){
+      $dev_cla = 'temperature';
+      $option_unit = '°C';
+    }
+
     $data = '{
     "name": "'.$option_name.'",
     "device": {
@@ -78,7 +84,7 @@ class mqtt extends json {
     }';
     $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1, 3);
     try {
-      $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data);
+      $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
     } catch (Exception $e) {
       $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
     }
@@ -91,9 +97,10 @@ class mqtt extends json {
    *
    * @param string topic
    * @param string data
+   * @param bool retain
    * @return return type
    */
-  public function post_mqtt($topic, $data) {
+  public function post_mqtt($topic, $data, bool $retain = false) {
     $connectionSettings = (new \PhpMqtt\Client\ConnectionSettings)
       // The username used for authentication when connecting to the broker.
       ->setUsername($this->config->mqtt_user)
@@ -105,7 +112,7 @@ class mqtt extends json {
 
     $mqtt = new \PhpMqtt\Client\MqttClient($server, $port, $clientId);
     $mqtt->connect($connectionSettings, false);
-    $mqtt->publish($topic, $data, 0);
+    $mqtt->publish($topic, $data, 0, $retain);
     $mqtt->disconnect();
   }
 }
