@@ -60,6 +60,12 @@ class mqtt extends json {
         break;
     }
 
+    # Hack to get Temperature to work
+    if(strstr($option_name, 'Temperature') !== false || strstr($option_name, 'Temperation') !== false ){
+      $dev_cla = 'temperature';
+      $option_unit = '°C';
+    }
+
     $data = '{
     "name": "'.$option_name.'",
     "device": {
