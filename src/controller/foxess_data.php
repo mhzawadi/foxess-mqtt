@@ -2,11 +2,6 @@
 
 // Public API - https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html
 
-// TODO: Get config and check for API KEY [x]
-// TODO: Get device list (https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html#get20device20list0a3ca20id3dget20device20list4303e203ca3e)
-// TODO: Get device real-time data (https://www.foxesscloud.com/public/i18n/en/OpenApiDocument.html#get20device20real-time20data0a3ca20id3dget20device20real-time20data4303e203ca3e)
-// TODO: process_data to load to MQTT
-
 namespace MHorwood\foxess_mqtt\controller;
 use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
@@ -30,7 +25,7 @@ class foxess_data extends json {
     try {
       $this->config = new config();
     } catch (Exception $e) {
-      $this->log('Missing config: '.$e->getMessage(), 3, 1);
+      $this->log('Missing config: '.$e->getMessage(), 3);
       exit(1);
     }
     $this->data   = new data($this->config);
@@ -41,13 +36,13 @@ class foxess_data extends json {
     // $errors = $this->device->get_error_codes();
 
     if( $this->foxess_data['setup'] < time() ){
-      $this->log('Update MQTT and device list', 1, 2);
+      $this->log('Update MQTT and device list', 1);
       if( $this->device->list() === true ){
         $this->foxess_data = $this->redis->get('foxess_data');
         $this->foxess_data['setup'] = $this->config->timestamp();
         $this->redis->set('foxess_data', $this->foxess_data);
       }else{
-        $this->log('Issues getting devices', 3, 2);
+        $this->log('Issues getting devices', 3);
       }
     }
 
@@ -56,7 +51,7 @@ class foxess_data extends json {
     }
 
     $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);
-    $this->log("Work complete", 1, 2);
+    $this->log("Work complete", 1);
   }
 
 }

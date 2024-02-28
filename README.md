@@ -55,7 +55,7 @@ The json for the config.json file
 }
 ```
 
-- log_level: is how much you want in the console, 1 is minimal, 2 is basic, 3 is everything
+- log_level: is how much you want in the console, 0 debug, 1 INFO, 2 WARN, 3 ERROR
 - mqtt_topic: this is a custom top level topic, you will still get sub topics for each device on your account
 - total_over_time: this will track KWh over time if true (the default) or whats downloaded at every run
 - you now need to collect your API key from the Foxess cloud portal

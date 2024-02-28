@@ -20,8 +20,8 @@ class mqtt extends json {
    * @return return type
    */
   public function setup_mqtt($deviceSN, $deviceType, $option_name, $option_unit) {
-    $this->log('Start of MQTT setup for HA', 1, 3);
-    $this->log($option_unit, 1, 3);
+    $this->log('Start of MQTT setup for HA', 1);
+    $this->log($option_unit, 1);
     $state_cla = 'measurement';
     switch($option_unit){
       case '°C':
@@ -82,7 +82,7 @@ class mqtt extends json {
     "exp_aft": 86400,
     "state_class": "'.$state_cla.'"
     }';
-    $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1, 3);
+    $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
     try {
       $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
     } catch (Exception $e) {
