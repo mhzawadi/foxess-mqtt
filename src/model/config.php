@@ -6,11 +6,8 @@ use MHorwood\foxess_mqtt\classes\logger;
 
 class config extends json {
 
-  public $foxess_username;
-  public $foxess_password;
   public $foxess_apikey;
   public $foxess_lang;
-  public $device_id;
   public $mqtt_host;
   public $mqtt_port;
   public $mqtt_user;
@@ -26,7 +23,6 @@ class config extends json {
       }
 
       $this->foxess_apikey = $config['foxess_apikey'];
-      $this->device_id = $config['device_id'];
       $this->mqtt_host = $config['mqtt_host'];
       $this->mqtt_port = $config['mqtt_port'];
       $this->mqtt_user = $config['mqtt_user'];
