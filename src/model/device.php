@@ -24,8 +24,7 @@ class device extends json {
    * Get the list of error codes
    *
    */
-  public function get_error_codes()
-  {
+  public function get_error_codes() {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_HTTPHEADER,
       array(
@@ -55,9 +54,24 @@ class device extends json {
   }
 
   /**
+   * Whats the error message
+   *
+   * use our list of error codes and get the message for it
+   *
+   * @param int errno The error number
+   * @return return string
+   */
+  public function errno($errno)
+  {
+    $errors = $this->redis->get('error_codes');
+    return $errors[$errno];
+  }
+
+  /**
    * Get the list of devices
    **/
   public function list(){
+    $this->get_error_codes();
     $this->log('start of device listing', 1);
     $foxess_data = $this->redis->get('foxess_data');
     $data = '{"pageSize": 10, "currentPage": 1}';
@@ -72,7 +86,7 @@ class device extends json {
     $return_data = json_decode($this_curl, true);
     $this->request->getinfo();
     if($return_data['errno'] > 0 ){
-      $this->log($this->config->errno($return_data['errno']), 3);
+      $this->log($this->errno($return_data['errno']), 3);
       return false;
     }else{
       $this->redis->set('devices', $return_data);

@@ -33,7 +33,6 @@ class foxess_data extends json {
     $this->mqtt   = new mqtt($this->config);
     $this->redis  = new mhredis($this->config);
     $this->foxess_data = $this->redis->get('foxess_data');
-    // $errors = $this->device->get_error_codes();
 
     if( $this->foxess_data['setup'] < time() ){
       $this->log('Update MQTT and device list', 1);
