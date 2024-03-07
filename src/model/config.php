@@ -60,20 +60,6 @@ class config extends json {
   }
 
   /**
-   * Whats the error message
-   *
-   * use our list of error codes and get the message for it
-   *
-   * @param int errno The error number
-   * @return return string
-   */
-  public function errno($errno)
-  {
-    $errors = $this->load_from_file('data/error_codes.json');
-    return $errors[$errno];
-  }
-
-  /**
    * undocumented function summary
    *
    * Undocumented function long description

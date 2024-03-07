@@ -12,11 +12,13 @@ class data extends json {
   protected $mqtt;
   protected $request;
   protected $config;
+  protected $error_codes;
   public function __construct($config){
     $this->config = $config;
     $this->request = new request($config);
     $this->mqtt  = new mqtt($config);
     $this->redis   = new mhredis($config);
+    $this->error_codes = $this->redis->get('error_codes');
   }
 
   /**
@@ -42,7 +44,7 @@ class data extends json {
       $this->log('Issue getting data', 3);
       return false;
     }elseif($return_data['errno'] > 0 ){
-      $this->log($this->config->errno($return_data['errno']), 3);
+      $this->log($this->error_codes[$return_data['errno']].'; code: '.$return_data['errno'], 3);
       return false;
     }else{
       $this->redis->set($deviceSN.'_collected', $return_data);
