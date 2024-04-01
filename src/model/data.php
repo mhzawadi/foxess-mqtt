@@ -145,14 +145,16 @@ class data extends json {
               switch($option){ // if we have an export or import
                 case 'feedinPower': // export
                   $sum = ($data['value']*0.01);// convert to KWh/min
-                  $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $sum;
-                  $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($sum, 2)));
+                  $over_time = ($sum+$foxess_data['devices'][$device]['variables'][$name.'_kwh']);
+                  $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $over_time;
+                  $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($over_time, 2)));
                   $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1);
                   break;
                 case 'gridConsumptionPower': // import
                   $sum = ($data['value']*0.01);// convert to KWh/min
-                  $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $sum;
-                  $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($sum, 2)));
+                  $over_time = ($sum+$foxess_data['devices'][$device]['variables'][$name.'_kwh']);
+                  $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = $over_time;
+                  $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name.'_kwh', abs(round($over_time, 2)));
                   $this->log('Post '.$value_kw.'KWh of '.$name.' to MQTT', 1);
                   break;
               }
