@@ -5,6 +5,9 @@ use MHorwood\foxess_mqtt\classes\json;
 use MHorwood\foxess_mqtt\classes\logger;
 use MHorwood\foxess_mqtt\model\config;
 
+# State -> https://developers.home-assistant.io/docs/core/entity/sensor/#available-state-classes
+# Device class -> https://www.home-assistant.io/integrations/sensor/
+
 class mqtt extends json {
 
   protected $config;
