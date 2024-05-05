@@ -75,7 +75,8 @@ class data extends json {
           $this->log($name,1,2);
           if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
              || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
-             strstr($option, 'Temperation') !== false
+             strstr($option, 'Temperation') !== false || strstr($option, 'currentFault') !== false ||
+             strstr($option, 'currentFaultCount') !== false
             ){ // list of non-KW/KWh
             if($collected_data[$device]['result'] == 'null'){
               $value = 0;
