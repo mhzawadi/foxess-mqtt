@@ -75,8 +75,7 @@ class data extends json {
           $this->log($name,1,2);
           if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
              || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
-             strstr($option, 'Temperation') !== false || strstr($option, 'currentFault') !== false ||
-             strstr($option, 'currentFaultCount') !== false
+             strstr($option, 'Temperation') !== false
             ){ // list of non-KW/KWh
             if($collected_data[$device]['result'] == 'null'){
               $value = 0;
@@ -92,6 +91,10 @@ class data extends json {
               $this->log('Post '.$value.' of '.$name.' to MQTT', 1);
 
             }
+          }elseif(strstr($option, 'currentFault') !== false ||
+          strstr($option, 'currentFaultCount') !== false){ // only Faults
+            $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
+            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'runningState') !== false){ // only runningState
             $data = $collected_data[$device]['result'][0]['datas'][$i];
             switch($data['value']){
