@@ -1,18 +1,20 @@
-FROM debian:buster
-LABEL Matthew Horwood <matt@horwood.biz>
+FROM alpine:3.20
+MAINTAINER Matthew Horwood <matt@horwood.biz>
 
-COPY . /foxess
+# Install required deb packages
+RUN apk update && apk upgrade && \
+    apk add php82-json php82-curl git php82 php82-phar php82-xml php82-tokenizer \
+    php82-sockets curl php82-openssl php82-mbstring php82-dom php82-xmlwriter php82-pecl-redis\
+    && rm -f /var/cache/apk/*; \
+    [ -f /usr/bin/php ] && rm -f /usr/bin/php; \
+    ln -s /usr/bin/php82 /usr/bin/php; \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" && \
+    mv composer.phar /usr/local/bin/composer;
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get -y install python3-pip python3-wheel \
-    curl jq vim && \
-    groupadd foxess && \
-    useradd -d /foxess -g foxess foxess && \
-    pip3 install mqttools; \
-    chown foxess:foxess /foxess -R;
-
-WORKDIR /foxess
-USER foxess
-
-CMD ["/foxess/run.sh"]
+COPY . /foxess-mqtt
+WORKDIR /foxess-mqtt
+RUN composer install;
+VOLUME /foxess-mqtt/data
+CMD ["/foxess-mqtt/run.sh"]
