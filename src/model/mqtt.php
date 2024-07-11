@@ -59,6 +59,7 @@ class mqtt extends json {
         break;
       default:
         $dev_cla = '';
+        $state_cla = '';
         $option_unit = null;
         break;
     }

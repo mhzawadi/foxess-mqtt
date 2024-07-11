@@ -163,6 +163,10 @@ class data extends json {
                   break;
               }
             }
+            $var_name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
+            $var_unit = $collected_data[$device]['result'][0]['datas'][$i]['unit'];
+            $var_value = $collected_data[$device]['result'][0]['datas'][$i]['value'];
+            $this->log('Found '.$var_name.' is '.$var_value.' of unit '.$var_unit, 1);
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
             $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1);
             $foxess_data['devices'][$device]['variables'][$name] = $value_kw;
