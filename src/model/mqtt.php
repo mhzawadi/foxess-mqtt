@@ -71,7 +71,11 @@ class mqtt extends json {
       $dev_cla = 'temperature';
       $option_unit = '°C';
     }
-
+    if(is_null($option_unit)){
+      $unit_of_measurement = '';
+    }else{
+      $unit_of_measurement = '"unit_of_measurement": "'.$option_unit.'",';
+    }
     $data = '{
     "name": "'.$option_name.'",
     "device": {
@@ -83,7 +87,7 @@ class mqtt extends json {
     "stat_t": "~'.$option_name.'",
     "uniq_id": "'.$deviceSN.'-'.$option_name.'",
     "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
-    "unit_of_measurement": "'.$option_unit.'",
+    '.$unit_of_measurement.'
     "dev_cla": "'.$dev_cla.'",
     "exp_aft": 86400,
     '.$state_cla_name.': "'.$state_cla.'"
