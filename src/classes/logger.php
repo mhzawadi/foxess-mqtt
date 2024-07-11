@@ -9,6 +9,7 @@ class logger {
   /**
    * Log function
    * Type: 0 debug, 1 INFO, 2 WARN, 3 ERROR
+   * Var: Bool
    **/
   protected function log($text, $type = 1, $var = false){
 

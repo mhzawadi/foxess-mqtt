@@ -58,8 +58,8 @@ class mqtt extends json {
         $dev_cla = 'reactive_power';
         break;
       default:
-        $dev_cla = '';
-        $state_cla = '';
+        $dev_cla = null;
+        $state_cla = null;
         $option_unit = null;
         break;
     }

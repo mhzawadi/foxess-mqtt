@@ -72,7 +72,7 @@ class data extends json {
         for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
           $option = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
           $name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
-          $this->log($name,1,2);
+          $this->log('Value name: '.$name, 1);
           if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
              || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
              strstr($option, 'Temperation') !== false
@@ -91,6 +91,10 @@ class data extends json {
               $this->log('Post '.$value.' of '.$name.' to MQTT', 1);
 
             }
+          }elseif(strstr($option, 'batStatus') !== false ||
+          strstr($option, 'batStatusV2') !== false){ // Battery Status
+            $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
+            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'currentFault') !== false ||
           strstr($option, 'currentFaultCount') !== false){ // only Faults
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
@@ -163,10 +167,6 @@ class data extends json {
                   break;
               }
             }
-            $var_name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
-            $var_unit = $collected_data[$device]['result'][0]['datas'][$i]['unit'];
-            $var_value = $collected_data[$device]['result'][0]['datas'][$i]['value'];
-            $this->log('Found '.$var_name.' is '.$var_value.' of unit '.$var_unit, 1);
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, abs(round($value_kw, 2)));
             $this->log('Post '.$value_kw.'kw of '.$name.' to MQTT', 1);
             $foxess_data['devices'][$device]['variables'][$name] = $value_kw;
