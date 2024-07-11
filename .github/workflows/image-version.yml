@@ -2,9 +2,8 @@ name: build our image for a version
 
 on:
   workflow_dispatch:
-  on:
-    release:
-      types: [published]
+  release:
+    types: [published]
 
 jobs:
   build:
