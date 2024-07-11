@@ -25,6 +25,7 @@ class mqtt extends json {
   public function setup_mqtt($deviceSN, $deviceType, $option_name, $option_unit) {
     $this->log('Start of MQTT setup for HA', 1);
     $this->log($option_unit, 1);
+    $state_cla_name = '"state_class"';
     $state_cla = 'measurement';
     switch($option_unit){
       case '°C':
@@ -58,8 +59,9 @@ class mqtt extends json {
         $dev_cla = 'reactive_power';
         break;
       default:
-        $dev_cla = null;
-        $state_cla = null;
+        $dev_cla = 'text';
+        $state_cla_name = '"mode"';
+        $state_cla = 'text';
         $option_unit = null;
         break;
     }
@@ -84,7 +86,7 @@ class mqtt extends json {
     "unit_of_measurement": "'.$option_unit.'",
     "dev_cla": "'.$dev_cla.'",
     "exp_aft": 86400,
-    "state_class": "'.$state_cla.'"
+    '.$state_cla_name.': "'.$state_cla.'"
     }';
     $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
     try {
