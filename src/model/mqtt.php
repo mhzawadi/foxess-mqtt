@@ -59,9 +59,6 @@ class mqtt extends json {
         $dev_cla = 'reactive_power';
         break;
       default:
-        $dev_cla = 'text';
-        $state_cla_name = '"mode"';
-        $state_cla = 'text';
         $option_unit = null;
         break;
     }
@@ -73,8 +70,10 @@ class mqtt extends json {
     }
     if(is_null($option_unit)){
       $unit_of_measurement = '';
+      $device_class = '';
     }else{
       $unit_of_measurement = '"unit_of_measurement": "'.$option_unit.'",';
+      $device_class = '"dev_cla": "'.$dev_cla.'",';
     }
     $data = '{
     "name": "'.$option_name.'",
@@ -87,9 +86,9 @@ class mqtt extends json {
     "stat_t": "~'.$option_name.'",
     "uniq_id": "'.$deviceSN.'-'.$option_name.'",
     "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
-    '.$unit_of_measurement.'
-    "dev_cla": "'.$dev_cla.'",
     "exp_aft": 86400,
+    '.$unit_of_measurement.'
+    '.$device_class.'
     '.$state_cla_name.': "'.$state_cla.'"
     }';
     $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
