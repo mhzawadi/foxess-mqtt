@@ -69,7 +69,7 @@ class mqtt extends json {
       $option_unit = '°C';
     }
     if(is_null($option_unit)){
-      $this->log('[INFO] This is a text object, cant import into HA', 1);
+      $this->log('[INFO] '.$option_name.' is a text object, cant import into HA', 1);
     }else{
       $unit_of_measurement = '"unit_of_measurement": "'.$option_unit.'",';
       $device_class = '"dev_cla": "'.$dev_cla.'",';

@@ -91,7 +91,7 @@ class data extends json {
               $this->log('Post '.$value.' of '.$name.' to MQTT', 1);
 
             }
-          }elseif(is_null($collected_data[$device]['result'][0]['datas'][$i]['unit'])){ // Text values
+          }elseif(array_key_exists('unit', $collected_data[$device]['result'][0]['datas'][$i]) === false){ // Text values
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
             $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'currentFault') !== false ||
