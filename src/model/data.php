@@ -92,10 +92,12 @@ class data extends json {
 
             }
           }elseif(array_key_exists('unit', $collected_data[$device]['result'][0]['datas'][$i]) === false){ // Text values
+            $data = $collected_data[$device]['result'][0]['datas'][$i];
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
             $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'currentFault') !== false ||
           strstr($option, 'currentFaultCount') !== false){ // only Faults
+            $data = $collected_data[$device]['result'][0]['datas'][$i];
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
             $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'runningState') !== false){ // only runningState
