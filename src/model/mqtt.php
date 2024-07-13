@@ -69,33 +69,32 @@ class mqtt extends json {
       $option_unit = '°C';
     }
     if(is_null($option_unit)){
-      $unit_of_measurement = '';
-      $device_class = '';
+      $this->log('[INFO] This is a text object, cant import into HA', 1);
     }else{
       $unit_of_measurement = '"unit_of_measurement": "'.$option_unit.'",';
       $device_class = '"dev_cla": "'.$dev_cla.'",';
-    }
-    $data = '{
-    "name": "'.$option_name.'",
-    "device": {
-      "identifiers": "'.$deviceSN.'",
-      "name": "'.$this->config->mqtt_topic.'-'.$deviceSN.'",
-      "model": "'.$deviceType.'",
-      "manufacturer": "FoxEss"
-    },
-    "stat_t": "~'.$option_name.'",
-    "uniq_id": "'.$deviceSN.'-'.$option_name.'",
-    "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
-    "exp_aft": 86400,
-    '.$unit_of_measurement.'
-    '.$device_class.'
-    '.$state_cla_name.': "'.$state_cla.'"
-    }';
-    $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
-    try {
-      $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
-    } catch (Exception $e) {
-      $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+      $data = '{
+      "name": "'.$option_name.'",
+      "device": {
+        "identifiers": "'.$deviceSN.'",
+        "name": "'.$this->config->mqtt_topic.'-'.$deviceSN.'",
+        "model": "'.$deviceType.'",
+        "manufacturer": "FoxEss"
+      },
+      "stat_t": "~'.$option_name.'",
+      "uniq_id": "'.$deviceSN.'-'.$option_name.'",
+      "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
+      "exp_aft": 86400,
+      '.$unit_of_measurement.'
+      '.$device_class.'
+      '.$state_cla_name.': "'.$state_cla.'"
+      }';
+      $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
+      try {
+        $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
+      } catch (Exception $e) {
+        $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+      }
     }
   }
 
