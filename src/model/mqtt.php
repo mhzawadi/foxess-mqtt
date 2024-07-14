@@ -25,6 +25,7 @@ class mqtt extends json {
   public function setup_mqtt($deviceSN, $deviceType, $option_name, $option_unit) {
     $this->log('Start of MQTT setup for HA', 1);
     $this->log($option_unit, 1);
+    $state_cla_name = '"state_class"';
     $state_cla = 'measurement';
     switch($option_unit){
       case '°C':
@@ -58,7 +59,6 @@ class mqtt extends json {
         $dev_cla = 'reactive_power';
         break;
       default:
-        $dev_cla = '';
         $option_unit = null;
         break;
     }
@@ -68,28 +68,33 @@ class mqtt extends json {
       $dev_cla = 'temperature';
       $option_unit = '°C';
     }
-
-    $data = '{
-    "name": "'.$option_name.'",
-    "device": {
-      "identifiers": "'.$deviceSN.'",
-      "name": "'.$this->config->mqtt_topic.'-'.$deviceSN.'",
-      "model": "'.$deviceType.'",
-      "manufacturer": "FoxEss"
-    },
-    "stat_t": "~'.$option_name.'",
-    "uniq_id": "'.$deviceSN.'-'.$option_name.'",
-    "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
-    "unit_of_measurement": "'.$option_unit.'",
-    "dev_cla": "'.$dev_cla.'",
-    "exp_aft": 86400,
-    "state_class": "'.$state_cla.'"
-    }';
-    $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
-    try {
-      $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
-    } catch (Exception $e) {
-      $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+    if(is_null($option_unit)){
+      $this->log('[INFO] '.$option_name.' is a text object, cant import into HA', 1);
+    }else{
+      $unit_of_measurement = '"unit_of_measurement": "'.$option_unit.'",';
+      $device_class = '"dev_cla": "'.$dev_cla.'",';
+      $data = '{
+      "name": "'.$option_name.'",
+      "device": {
+        "identifiers": "'.$deviceSN.'",
+        "name": "'.$this->config->mqtt_topic.'-'.$deviceSN.'",
+        "model": "'.$deviceType.'",
+        "manufacturer": "FoxEss"
+      },
+      "stat_t": "~'.$option_name.'",
+      "uniq_id": "'.$deviceSN.'-'.$option_name.'",
+      "~": "'.$this->config->mqtt_topic.'/'.$deviceSN.'/",
+      "exp_aft": 86400,
+      '.$unit_of_measurement.'
+      '.$device_class.'
+      '.$state_cla_name.': "'.$state_cla.'"
+      }';
+      $this->log('Post to MQTT '.$deviceSN.'-'.$option_name, 1);
+      try {
+        $this->post_mqtt('homeassistant/sensor/'.$deviceSN.'-'.$option_name.'/config', $data, true);
+      } catch (Exception $e) {
+        $this->log('[WARN] MQTT not yet ready, need to sleep on first run maybe', 1);
+      }
     }
   }
 

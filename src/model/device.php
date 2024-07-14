@@ -173,7 +173,7 @@ class device extends json {
       }
     }
     if($this->redis->set('foxess_data', $foxess_data)){
-      $this->log('all done', 1,  3);
+      $this->log('all done', 1);
       return true;
     }else{
       $this->log('Redis didnt save', 1);

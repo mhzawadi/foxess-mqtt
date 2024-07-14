@@ -72,7 +72,7 @@ class data extends json {
         for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
           $option = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
           $name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
-          $this->log($name,1,2);
+          $this->log('Value name: '.$name, 1);
           if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
              || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
              strstr($option, 'Temperation') !== false
@@ -91,10 +91,6 @@ class data extends json {
               $this->log('Post '.$value.' of '.$name.' to MQTT', 1);
 
             }
-          }elseif(strstr($option, 'currentFault') !== false ||
-          strstr($option, 'currentFaultCount') !== false){ // only Faults
-            $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
-            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(strstr($option, 'runningState') !== false){ // only runningState
             $data = $collected_data[$device]['result'][0]['datas'][$i];
             switch($data['value']){
@@ -132,6 +128,10 @@ class data extends json {
                 $data['value'] = "off-grid";
                 break;
             }
+            $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
+            $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
+          }elseif(array_key_exists('unit', $collected_data[$device]['result'][0]['datas'][$i]) === false){ // Text values
+            $data = $collected_data[$device]['result'][0]['datas'][$i];
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
             $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }else{ // KW/KWh
