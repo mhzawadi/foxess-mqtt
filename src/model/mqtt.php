@@ -42,11 +42,6 @@ class mqtt extends json {
         break;
       case 'kW':
         $dev_cla = 'power';
-        switch($option_name){
-          case 'todayYield':
-            $state_cla = 'total_increasing';
-            break;
-        }
         break;
       case 'kWh':
         $dev_cla = 'energy';
