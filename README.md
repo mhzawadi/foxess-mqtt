@@ -1,11 +1,3 @@
-# BREAKING CHANGE !!!!!
-
-This version now needs redis to store all the data it collects, before an upload to MQTT.
-
-See the below compose file for a quick setup
-
-## BREAKING CHANGE !!!!
-
 # Horwoods Foxess Cloud Data collector
 
 This is a very simple tool to get the data out of FoxEss-cloud and into MQTT, it has some very rough edges.
