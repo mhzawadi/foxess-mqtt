@@ -38,7 +38,6 @@ class foxess_data extends json {
       $this->log('Update MQTT and device list', 1);
       if( $this->device->list() === true ){
         $this->foxess_data = $this->redis->get('foxess_data');
-        $this->foxess_data['setup'] = $this->config->timestamp();
         $this->redis->set('foxess_data', $this->foxess_data);
       }else{
         $this->log('Issues getting devices', 3);
@@ -47,6 +46,17 @@ class foxess_data extends json {
 
     for( $device = 0; $device < $this->foxess_data['device_total']; $device++ ){ //for each device
       $this->collected_data[$device] = $this->data->collect_data($this->foxess_data, $device);
+    }
+
+    if( $this->foxess_data['setup'] < time() ){
+      $this->log('Update MQTT with variable list', 1);
+      if( $this->data->update_mqtt($this->foxess_data, $this->collected_data) === true ){
+        $this->foxess_data = $this->redis->get('foxess_data');
+        $this->foxess_data['setup'] = $this->config->timestamp();
+        $this->redis->set('foxess_data', $this->foxess_data);
+      }else{
+        $this->log('Issues updating MQTT', 3);
+      }
     }
 
     $this->data->process_data($this->config->mqtt_topic, $this->foxess_data, $this->collected_data, $this->config->total_over_time);

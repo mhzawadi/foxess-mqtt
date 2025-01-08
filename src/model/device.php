@@ -147,28 +147,6 @@ class device extends json {
           $name = array_keys($variables[$i]);
           $variable_name = $name[0];
           $foxess_data['devices'][$device]['variable_list'][$i] = $variable_name;
-          if(isset($variables[$i][$variable_name]['unit'])){
-            switch($variable_name){
-              case 'feedinPower':
-                $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name.'_kwh', 'kWh');
-                if(!isset($foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'])){
-                  $foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'] = 0;
-                }
-                break;
-              case 'gridConsumptionPower':
-                $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name.'_kwh', 'kWh');
-                if(!isset($foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'])){
-                  $foxess_data['devices'][$device]['variables'][$variable_name.'_kwh'] = 0;
-                }
-                break;
-              }
-              $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name, $variables[$i][$variable_name]['unit']);
-          }else{
-            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $variable_name, null);
-          }
-          if(!isset($foxess_data['devices'][$device]['variables'][$variable_name])){
-            $foxess_data['devices'][$device]['variables'][$variable_name] = 0;
-          }
         }
       }
     }
