@@ -1,5 +1,4 @@
-version: "2.1"
-
+---
 volumes:
   mosquitto_data:
   mosquitto_logs:

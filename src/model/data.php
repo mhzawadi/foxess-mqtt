@@ -54,6 +54,43 @@ class data extends json {
     }
   }
 
+  public function update_mqtt($foxess_data, $collected_data){
+    for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
+      $options_count = count($collected_data[$device]['result'][0]['datas']);
+      for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
+        $name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
+        if(isset($collected_data[$device]['result'][0]['datas'][$i]['unit'])){
+          $unit = $collected_data[$device]['result'][0]['datas'][$i]['unit'];
+        }else{
+          $unit = false;
+        }
+        if($unit !== false){
+          switch($name){
+            case 'feedinPower':
+              $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name.'_kwh', 'kWh');
+              if(!isset($foxess_data['devices'][$device]['variables'][$name.'_kwh'])){
+                $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = 0;
+              }
+              break;
+            case 'gridConsumptionPower':
+              $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name.'_kwh', 'kWh');
+              if(!isset($foxess_data['devices'][$device]['variables'][$name.'_kwh'])){
+                $foxess_data['devices'][$device]['variables'][$name.'_kwh'] = 0;
+              }
+              break;
+            }
+            $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name, $unit);
+        }else{
+          $this->mqtt->setup_mqtt($foxess_data['devices'][$device]['deviceSN'], $foxess_data['devices'][$device]['deviceType'], $name, null);
+        }
+        if(!isset($foxess_data['devices'][$device]['variables'][$name])){
+          $foxess_data['devices'][$device]['variables'][$name] = 0;
+        }
+      }
+    }
+    return true;
+  }
+
   /**
    * Process data and pass to MQTT
    *
@@ -71,7 +108,7 @@ class data extends json {
         $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
         for( $i = 0 ; $i < $options_count; $i++ ){ //for each value
           $option = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
-          $name = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
+          $name   = $collected_data[$device]['result'][0]['datas'][$i]['variable'];
           $this->log('Value name: '.$name, 1);
           if(strstr($option, 'Temperature') !== false || strstr($option, 'SoC') !== false
              || strstr($option, 'Volt') !== false || strstr($option, 'Current') !== false ||
@@ -93,41 +130,6 @@ class data extends json {
             }
           }elseif(strstr($option, 'runningState') !== false){ // only runningState
             $data = $collected_data[$device]['result'][0]['datas'][$i];
-            switch($data['value']){
-              case "165":
-                $data['value'] = "fault";
-                break;
-              case "166":
-                $data['value'] = "permanent-fault";
-                break;
-              case "167":
-                $data['value'] = "standby";
-                break;
-              case "168":
-                $data['value'] = "upgrading";
-                break;
-              case "169":
-                $data['value'] = "fct";
-                break;
-              case "170":
-                $data['value'] = "illegal";
-                break;
-              case "160":
-                $data['value'] = "self-test";
-                break;
-              case "161":
-                $data['value'] = "waiting";
-                break;
-              case "162":
-                $data['value'] = "checking";
-                break;
-              case "163":
-                $data['value'] = "on-grid";
-                break;
-              case "164":
-                $data['value'] = "off-grid";
-                break;
-            }
             $this->mqtt->post_mqtt(''.$mqtt_topic.'/'.$deviceSN.'/'.$name, $data['value']);
             $this->log('Post '.$data['value'].' of '.$name.' to MQTT', 1);
           }elseif(array_key_exists('unit', $collected_data[$device]['result'][0]['datas'][$i]) === false){ // Text values
