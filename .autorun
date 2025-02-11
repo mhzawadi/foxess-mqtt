@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ ! -d .venv ]
+then
+  echo -e "\x1b[0;31mYou need an environment setup...\x1b[0m"
+  python3.10 -m venv .venv
+  source .venv/bin/activate
+  python3.10 -m pip install --upgrade pip
+  python3.10 -m pip install -r requirements.txt
+  echo -e "\x1b[0;33mthere, its all done\x1b[0m"
+elif [ -z "$VIRTUAL_ENV" ]
+then
+  echo -e "\x1b[0;33m  Missing that environment, starting it now...\x1b[0m"
+  source .venv/bin/activate
+  echo -e "\x1b[1;35m  Downloading updates to the repo sir...\x1b[0m"
+  echo -e "The current version is $(cat VERSION)"
+fi
+
+function git-tag() {
+    if [ $# -lt 1 ]
+    then
+      echo "<tag>"
+      echo "v1.2.3"
+    else
+      sed -i '' "s/version v[0-9]*\.[0-9]*\.[0-9]*/version $1/" src/view/settings_app.php
+      gitchangelog >| CHANGELOG.md
+      git add .
+      git commit -m "doc: change log for tag $1"
+      git push
+      git tag $1
+      git push origin --tag
+    fi
+}
