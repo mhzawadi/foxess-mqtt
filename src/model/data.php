@@ -54,6 +54,11 @@ class data extends json {
     }
   }
 
+  /**
+    * loop over every device, then
+    * loop over all the collected variables
+    * switch on unit type and post auto config to MQTT
+   **/
   public function update_mqtt($foxess_data, $collected_data){
     for( $device = 0; $device < $foxess_data['device_total']; $device++ ){ //loop over devices
       $options_count = count($collected_data[$device]['result'][0]['datas']);
@@ -93,9 +98,6 @@ class data extends json {
 
   /**
    * Process data and pass to MQTT
-   *
-   * Undocumented function long description
-   *
    * @return return type
    */
   public function process_data($mqtt_topic, $foxess_data, $collected_data, $total_over_time)  {
