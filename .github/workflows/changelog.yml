@@ -1,11 +1,11 @@
-name: "Tag post merge"
+name: "Update Change Log"
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Release
+    name: Rebuild Change Log
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
