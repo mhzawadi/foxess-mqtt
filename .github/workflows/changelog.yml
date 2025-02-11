@@ -7,7 +7,6 @@ jobs:
   build:
     name: Rebuild Change Log
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - name: checkout code
         uses: actions/checkout@v4
