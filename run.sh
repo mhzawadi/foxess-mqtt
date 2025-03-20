@@ -4,7 +4,7 @@
 if [ $TIMEZONE ]
 then
   echo "Setting your timezone to $TIMEZONE"
-  sed -i'' "s!;date.timezone =!date.timezone = $TIMEZONE!" /etc/php82/php.ini
+  sed -i'' "s!;date.timezone =!date.timezone = $TIMEZONE!" /etc/php84/php.ini
 else
   echo "We dont have a timezone, it could UTC"
 fi
