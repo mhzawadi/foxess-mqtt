@@ -19,11 +19,19 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Changes
 
 *  rename. [Matthew Horwood]
 
 ### Other
+
+* Merge branch 'main' of github.com:mhzawadi/foxess-mqtt. [Matthew Horwood]
+
+* Fix build. [Matthew Horwood]
+
+  bug: update lock file
 
 * Build(deps-dev): bump phpunit/phpunit from 11.5.7 to 12.3.4 (#64) [dependabot[bot]]
 

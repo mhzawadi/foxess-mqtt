@@ -22,7 +22,6 @@ function git-tag() {
       echo "<tag>"
       echo "v1.2.3"
     else
-      sed -i '' "s/version v[0-9]*\.[0-9]*\.[0-9]*/version $1/" src/view/settings_app.php
       gitchangelog >| CHANGELOG.md
       git add .
       git commit -m "doc: change log for tag $1"
