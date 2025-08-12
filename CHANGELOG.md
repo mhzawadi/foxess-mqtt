@@ -17,9 +17,32 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Changes
 
 *  rename. [Matthew Horwood]
+
+### Other
+
+* Build(deps-dev): bump phpunit/phpunit from 11.5.7 to 12.3.4 (#64) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 11.5.7 to 12.3.4.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.3.4/ChangeLog-12.3.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/11.5.7...12.3.4)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.3.4
+    dependency-type: direct:development
+    update-type: version-update:semver-major
+  ...
+
+* Update run.sh. [Matthew Horwood]
+
+  bug: fix php version
 
 
 ## v0.1.11 (2025-02-11)
