@@ -3,6 +3,26 @@
 
 ## (unreleased)
 
+### Other
+
+* Build(deps): bump actions/checkout from 4 to 5 (#63) [dependabot[bot]]
+
+  Bumps [actions/checkout](https://github.com/actions/checkout) from 4 to 5.
+  - [Release notes](https://github.com/actions/checkout/releases)
+  - [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+  - [Commits](https://github.com/actions/checkout/compare/v4...v5)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/checkout
+    dependency-version: '5'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+
+## v0.1.12 (2025-08-12)
+
 ### New
 
 *  update change log. [Matthew Horwood]
@@ -14,6 +34,8 @@
 *  allow fetching all commits. [Matthew Horwood]
 
 ### Documentation
+
+*  change log for tag v0.1.12. [Matthew Horwood]
 
 *  update CHANGELOG.md. [github-actions]
 
