@@ -7,7 +7,24 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps-dev): bump phpunit/phpunit from 12.3.6 to 12.3.7 (#66) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.3.6 to 12.3.7.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.3.7/ChangeLog-12.3.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.3.6...12.3.7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.3.7
+    dependency-type: direct:development
+    update-type: version-update:semver-patch
+  ...
 
 * Build(deps-dev): bump phpunit/phpunit from 12.3.4 to 12.3.6 (#65) [dependabot[bot]]
 
