@@ -9,7 +9,38 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps): bump actions/setup-python from 5 to 6 (#68) [dependabot[bot]]
+
+  Bumps [actions/setup-python](https://github.com/actions/setup-python) from 5 to 6.
+  - [Release notes](https://github.com/actions/setup-python/releases)
+  - [Commits](https://github.com/actions/setup-python/compare/v5...v6)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/setup-python
+    dependency-version: '6'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Build(deps-dev): bump phpunit/phpunit from 12.3.7 to 12.3.8 (#69) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.3.7 to 12.3.8.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.3.8/ChangeLog-12.3.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.3.7...12.3.8)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.3.8
+    dependency-type: direct:development
+    update-type: version-update:semver-patch
+  ...
 
 * Build(deps-dev): bump phpunit/phpunit from 12.3.6 to 12.3.7 (#66) [dependabot[bot]]
 
