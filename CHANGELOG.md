@@ -11,7 +11,23 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps): bump actions/github-script from 7 to 8 (#67) [dependabot[bot]]
+
+  Bumps [actions/github-script](https://github.com/actions/github-script) from 7 to 8.
+  - [Release notes](https://github.com/actions/github-script/releases)
+  - [Commits](https://github.com/actions/github-script/compare/v7...v8)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/github-script
+    dependency-version: '8'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
 
 * Build(deps): bump actions/setup-python from 5 to 6 (#68) [dependabot[bot]]
 
