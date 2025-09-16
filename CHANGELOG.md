@@ -3,7 +3,29 @@
 
 ## (unreleased)
 
+### Other
+
+* Build(deps-dev): bump phpunit/phpunit from 12.3.8 to 12.3.11 (#70) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.3.8 to 12.3.11.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.3.11/ChangeLog-12.3.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.3.8...12.3.11)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.3.11
+    dependency-type: direct:development
+    update-type: version-update:semver-patch
+  ...
+
+
+## v0.1.13 (2025-09-08)
+
 ### Documentation
+
+*  update CHANGELOG.md. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
 
