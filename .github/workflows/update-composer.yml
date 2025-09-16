@@ -7,9 +7,12 @@ on:
 
 jobs:
   build:
-    - name: checkout code
-      uses: actions/checkout@v5
-    - name: Install dependencies
-      uses: php-actions/composer@v6
-      with:
-        command: update
+    name: get the files and update
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v5
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          command: update
