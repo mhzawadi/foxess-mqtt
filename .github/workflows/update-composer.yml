@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'composer.lock'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,3 +17,10 @@ jobs:
         uses: php-actions/composer@v6
         with:
           command: update
+      - name: Commit updated change log
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add composer.lock
+          git commit -m "doc: update composer lock file" || exit 0
+          git push
