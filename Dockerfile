@@ -1,5 +1,5 @@
-FROM alpine:3.21
-MAINTAINER Matthew Horwood <matt@horwood.biz>
+FROM alpine:3.22
+LABEL org.opencontainers.image.authors="matt@horwood.biz"
 
 # Install required deb packages
 RUN apk update && apk upgrade && \
