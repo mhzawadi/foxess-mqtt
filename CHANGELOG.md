@@ -3,7 +3,25 @@
 
 ## (unreleased)
 
+### Documentation
+
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Alpine 3.22 (#71) [Matthew Horwood]
+
+  * Alpine 3.22
+
+  * bug: fix lock file
+  chor: dont fail on bin image
+
+  * bug: fix image owner
+  chor: tidy up shell
+
+  * test a composer update
+
+  * bug: make it a real workflow
 
 * Build(deps-dev): bump phpunit/phpunit from 12.3.8 to 12.3.11 (#70) [dependabot[bot]]
 
