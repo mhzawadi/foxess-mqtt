@@ -17,7 +17,24 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps): bump php-mqtt/client from 2.2.0 to 2.3.0 (#74) [dependabot[bot]]
+
+  Bumps [php-mqtt/client](https://github.com/php-mqtt/client) from 2.2.0 to 2.3.0.
+  - [Release notes](https://github.com/php-mqtt/client/releases)
+  - [Changelog](https://github.com/php-mqtt/client/blob/master/CHANGELOG.md)
+  - [Commits](https://github.com/php-mqtt/client/compare/v2.2.0...v2.3.0)
+
+  ---
+  updated-dependencies:
+  - dependency-name: php-mqtt/client
+    dependency-version: 2.3.0
+    dependency-type: direct:production
+    update-type: version-update:semver-minor
+  ...
 
 * Build(deps-dev): bump phpunit/phpunit from 12.3.15 to 12.4.2 (#77) [dependabot[bot]]
 
