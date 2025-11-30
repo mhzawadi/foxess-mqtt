@@ -19,7 +19,39 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps-dev): bump phpunit/phpunit from 12.4.2 to 12.4.4 (#78) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.4.2 to 12.4.4.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.4.4/ChangeLog-12.4.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.4.2...12.4.4)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.4.4
+    dependency-type: direct:development
+    update-type: version-update:semver-patch
+  ...
+
+* Build(deps): bump actions/checkout from 5 to 6 (#79) [dependabot[bot]]
+
+  Bumps [actions/checkout](https://github.com/actions/checkout) from 5 to 6.
+  - [Release notes](https://github.com/actions/checkout/releases)
+  - [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+  - [Commits](https://github.com/actions/checkout/compare/v5...v6)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/checkout
+    dependency-version: '6'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
 
 * Build(deps): bump php-mqtt/client from 2.2.0 to 2.3.0 (#74) [dependabot[bot]]
 
