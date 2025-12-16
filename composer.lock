@@ -71,16 +71,16 @@
         },
         {
             "name": "php-mqtt/client",
-            "version": "v2.3.0",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mqtt/client.git",
-                "reference": "3d141846753a0adee265680ae073cfb9030f2390"
+                "reference": "002134028bf0279e411e2419cde6b18983605780"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mqtt/client/zipball/3d141846753a0adee265680ae073cfb9030f2390",
-                "reference": "3d141846753a0adee265680ae073cfb9030f2390",
+                "url": "https://api.github.com/repos/php-mqtt/client/zipball/002134028bf0279e411e2419cde6b18983605780",
+                "reference": "002134028bf0279e411e2419cde6b18983605780",
                 "shasum": ""
             },
             "require": {
@@ -122,9 +122,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-mqtt/client/issues",
-                "source": "https://github.com/php-mqtt/client/tree/v2.3.0"
+                "source": "https://github.com/php-mqtt/client/tree/v2.3.1"
             },
-            "time": "2025-09-30T17:53:34+00:00"
+            "time": "2025-12-09T19:37:16+00:00"
         },
         {
             "name": "psr/log",
