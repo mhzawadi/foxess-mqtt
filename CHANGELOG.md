@@ -21,7 +21,39 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps): bump php-mqtt/client from 2.3.0 to 2.3.1 (#81) [dependabot[bot]]
+
+  Bumps [php-mqtt/client](https://github.com/php-mqtt/client) from 2.3.0 to 2.3.1.
+  - [Release notes](https://github.com/php-mqtt/client/releases)
+  - [Changelog](https://github.com/php-mqtt/client/blob/master/CHANGELOG.md)
+  - [Commits](https://github.com/php-mqtt/client/compare/v2.3.0...v2.3.1)
+
+  ---
+  updated-dependencies:
+  - dependency-name: php-mqtt/client
+    dependency-version: 2.3.1
+    dependency-type: direct:production
+    update-type: version-update:semver-patch
+  ...
+
+* Build(deps-dev): bump phpunit/phpunit from 12.4.4 to 12.5.3 (#82) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.4.4 to 12.5.3.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.5.3/ChangeLog-12.5.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.4.4...12.5.3)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.5.3
+    dependency-type: direct:development
+    update-type: version-update:semver-minor
+  ...
 
 * Build(deps-dev): bump phpunit/phpunit from 12.4.2 to 12.4.4 (#78) [dependabot[bot]]
 
