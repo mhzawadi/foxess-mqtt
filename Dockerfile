@@ -1,10 +1,11 @@
-FROM alpine:3.22
+FROM alpine:3.23
 LABEL org.opencontainers.image.authors="matt@horwood.biz"
 
 # Install required deb packages
 RUN apk update && apk upgrade && \
     apk add php84-json php84-curl git php84 php84-phar php84-xml php84-tokenizer \
-    php84-sockets curl php84-openssl php84-mbstring php84-dom php84-xmlwriter php84-pecl-redis\
+    php84-sockets curl php84-openssl php84-mbstring php84-dom php84-xmlwriter php84-pecl-redis \
+    php84-ctype \
     && rm -f /var/cache/apk/*; \
     [ -f /usr/bin/php ] && rm -f /usr/bin/php; \
     ln -s /usr/bin/php84 /usr/bin/php; \
