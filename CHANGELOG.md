@@ -5,6 +5,8 @@
 
 ### New
 
+*  alpine update chor: composer update chor: python fix. [Matthew Horwood]
+
 *  a working workflow. [Matthew Horwood]
 
 ### Fix
@@ -13,7 +15,7 @@
 
 ### Documentation
 
-*  update CHANGELOG.md. [github-actions]
+*  update composer lock file. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
 
@@ -22,8 +24,48 @@
 *  update CHANGELOG.md. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
+
+*  update CHANGELOG.md. [github-actions]
+
+*  update CHANGELOG.md. [github-actions]
+
+### Changes
+
+*  fixes. [Matthew Horwood]
+
+*  composer update. [Matthew Horwood]
 
 ### Other
+
+* Build(deps-dev): bump phpunit/phpunit from 12.5.8 to 13.0.5 (#88) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.5.8 to 13.0.5.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/13.0.5/ChangeLog-13.0.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.5.8...13.0.5)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 13.0.5
+    dependency-type: direct:development
+    update-type: version-update:semver-major
+  ...
+
+* Build(deps-dev): bump phpunit/phpunit from 12.5.3 to 12.5.7 (#85) [dependabot[bot]]
+
+  Bumps [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) from 12.5.3 to 12.5.7.
+  - [Release notes](https://github.com/sebastianbergmann/phpunit/releases)
+  - [Changelog](https://github.com/sebastianbergmann/phpunit/blob/12.5.7/ChangeLog-12.5.md)
+  - [Commits](https://github.com/sebastianbergmann/phpunit/compare/12.5.3...12.5.7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: phpunit/phpunit
+    dependency-version: 12.5.7
+    dependency-type: direct:development
+    update-type: version-update:semver-patch
+  ...
 
 * Build(deps): bump php-mqtt/client from 2.3.0 to 2.3.1 (#81) [dependabot[bot]]
 
