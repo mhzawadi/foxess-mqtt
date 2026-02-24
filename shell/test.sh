@@ -10,7 +10,7 @@ elif [ "$1" == "composer" ]
 then
   docker image rm mhzawadi/foxess-mqtt:dev-php;
   docker build -t mhzawadi/foxess-mqtt:dev-php -f Dockerfile . && \
-  docker run --rm -it -v '/Users/matt/git/foxess-mqtt:/foxess-mqtt' mhzawadi/foxess-mqtt:dev-php /usr/local/bin/composer update
+  docker run --rm -it -v '/Users/matt/git/foxess-mqtt:/foxess-mqtt' mhzawadi/foxess-mqtt:dev-php /usr/local/bin/composer upgrade
 elif [ "$1" == "up" ]
 then
   docker image rm mhzawadi/foxess-mqtt:dev-php && \
