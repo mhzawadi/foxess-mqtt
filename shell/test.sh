@@ -11,7 +11,6 @@ then
   docker image rm mhzawadi/foxess-mqtt:dev-php;
   docker build -t mhzawadi/foxess-mqtt:dev-php -f Dockerfile . && \
   docker run --rm -it -v '/Users/matt/git/foxess-mqtt:/foxess-mqtt' mhzawadi/foxess-mqtt:dev-php /usr/local/bin/composer update
-  docker compose -f docker-compose-dev.yml up -d
 elif [ "$1" == "up" ]
 then
   docker image rm mhzawadi/foxess-mqtt:dev-php && \
