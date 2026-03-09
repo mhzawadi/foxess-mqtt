@@ -3,7 +3,25 @@
 
 ## (unreleased)
 
+### Documentation
+
+*  update CHANGELOG.md. [github-actions]
+
 ### Other
+
+* Build(deps): bump docker/build-push-action from 6 to 7 (#90) [dependabot[bot]]
+
+  Bumps [docker/build-push-action](https://github.com/docker/build-push-action) from 6 to 7.
+  - [Release notes](https://github.com/docker/build-push-action/releases)
+  - [Commits](https://github.com/docker/build-push-action/compare/v6...v7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: docker/build-push-action
+    dependency-version: '7'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
 
 * Build(deps): bump docker/setup-qemu-action from 3 to 4 (#91) [dependabot[bot]]
 
