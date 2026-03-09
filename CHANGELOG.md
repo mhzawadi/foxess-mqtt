@@ -3,6 +3,25 @@
 
 ## (unreleased)
 
+### Other
+
+* Build(deps): bump docker/setup-qemu-action from 3 to 4 (#91) [dependabot[bot]]
+
+  Bumps [docker/setup-qemu-action](https://github.com/docker/setup-qemu-action) from 3 to 4.
+  - [Release notes](https://github.com/docker/setup-qemu-action/releases)
+  - [Commits](https://github.com/docker/setup-qemu-action/compare/v3...v4)
+
+  ---
+  updated-dependencies:
+  - dependency-name: docker/setup-qemu-action
+    dependency-version: '4'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+
+## v0.1.15 (2026-02-24)
+
 ### New
 
 *  alpine update chor: composer update chor: python fix. [Matthew Horwood]
@@ -14,6 +33,8 @@
 *  step name. [Matthew Horwood]
 
 ### Documentation
+
+*  update CHANGELOG.md. [github-actions]
 
 *  update composer lock file. [github-actions]
 
