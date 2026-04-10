@@ -3,6 +3,59 @@
 
 ## (unreleased)
 
+### Documentation
+
+*  update CHANGELOG.md. [github-actions]
+
+*  update CHANGELOG.md. [github-actions]
+
+### Other
+
+* Build(deps): bump docker/setup-buildx-action from 3 to 4 (#89) [dependabot[bot]]
+
+  Bumps [docker/setup-buildx-action](https://github.com/docker/setup-buildx-action) from 3 to 4.
+  - [Release notes](https://github.com/docker/setup-buildx-action/releases)
+  - [Commits](https://github.com/docker/setup-buildx-action/compare/v3...v4)
+
+  ---
+  updated-dependencies:
+  - dependency-name: docker/setup-buildx-action
+    dependency-version: '4'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Build(deps): bump docker/build-push-action from 6 to 7 (#90) [dependabot[bot]]
+
+  Bumps [docker/build-push-action](https://github.com/docker/build-push-action) from 6 to 7.
+  - [Release notes](https://github.com/docker/build-push-action/releases)
+  - [Commits](https://github.com/docker/build-push-action/compare/v6...v7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: docker/build-push-action
+    dependency-version: '7'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Build(deps): bump docker/setup-qemu-action from 3 to 4 (#91) [dependabot[bot]]
+
+  Bumps [docker/setup-qemu-action](https://github.com/docker/setup-qemu-action) from 3 to 4.
+  - [Release notes](https://github.com/docker/setup-qemu-action/releases)
+  - [Commits](https://github.com/docker/setup-qemu-action/compare/v3...v4)
+
+  ---
+  updated-dependencies:
+  - dependency-name: docker/setup-qemu-action
+    dependency-version: '4'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+
+## v0.1.15 (2026-02-24)
+
 ### New
 
 *  alpine update chor: composer update chor: python fix. [Matthew Horwood]
@@ -14,6 +67,8 @@
 *  step name. [Matthew Horwood]
 
 ### Documentation
+
+*  update CHANGELOG.md. [github-actions]
 
 *  update composer lock file. [github-actions]
 
