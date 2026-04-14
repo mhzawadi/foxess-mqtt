@@ -5,11 +5,41 @@
 
 ### Documentation
 
+*  update composer lock file. [github-actions]
+
 *  update CHANGELOG.md. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
+
+*  update CHANGELOG.md. [github-actions]
+
+### Changes
+
+*  update lock file. [Matthew Horwood]
+
+*  undo deplendabot. [Matthew Horwood]
 
 ### Other
+
+* Build(deps): bump actions/github-script from 8 to 9 (#94) [dependabot[bot]]
+
+  Bumps [actions/github-script](https://github.com/actions/github-script) from 8 to 9.
+  - [Release notes](https://github.com/actions/github-script/releases)
+  - [Commits](https://github.com/actions/github-script/compare/v8...v9)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/github-script
+    dependency-version: '9'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Merge branch 'main' of github.com:mhzawadi/foxess-mqtt. [Matthew Horwood]
+
+* Merge branch 'main' of github.com:mhzawadi/foxess-mqtt. [Matthew Horwood]
+
+* Update FUNDING.yml. [Matthew Horwood]
 
 * Build(deps): bump docker/setup-buildx-action from 3 to 4 (#89) [dependabot[bot]]
 
@@ -52,6 +82,8 @@
     dependency-type: direct:production
     update-type: version-update:semver-major
   ...
+
+* Merge branch 'main' of github.com:mhzawadi/foxess-mqtt. [Matthew Horwood]
 
 
 ## v0.1.15 (2026-02-24)
