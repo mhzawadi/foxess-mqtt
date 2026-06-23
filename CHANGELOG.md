@@ -5,6 +5,8 @@
 
 ### Documentation
 
+*  update CHANGELOG.md. [github-actions]
+
 *  update composer lock file. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
@@ -20,6 +22,31 @@
 *  undo deplendabot. [Matthew Horwood]
 
 ### Other
+
+* Build(deps): bump actions/checkout from 6 to 7 (#103) [dependabot[bot]]
+
+  Bumps [actions/checkout](https://github.com/actions/checkout) from 6 to 7.
+  - [Release notes](https://github.com/actions/checkout/releases)
+  - [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+  - [Commits](https://github.com/actions/checkout/compare/v6...v7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/checkout
+    dependency-version: '7'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Package update. [Matthew Horwood]
+
+* Package update. [Matthew Horwood]
+
+* Package updates. [Matthew Horwood]
+
+* Packages updates. [Matthew Horwood]
+
+* Update dev tools. [Matthew Horwood]
 
 * Build(deps): bump actions/github-script from 8 to 9 (#94) [dependabot[bot]]
 
