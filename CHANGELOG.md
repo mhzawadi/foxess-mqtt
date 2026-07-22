@@ -7,6 +7,8 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 *  update composer lock file. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
@@ -22,6 +24,26 @@
 *  undo deplendabot. [Matthew Horwood]
 
 ### Other
+
+* Build(deps): bump actions/setup-python from 6 to 7 (#107) [dependabot[bot]]
+
+  Bumps [actions/setup-python](https://github.com/actions/setup-python) from 6 to 7.
+  - [Release notes](https://github.com/actions/setup-python/releases)
+  - [Commits](https://github.com/actions/setup-python/compare/v6...v7)
+
+  ---
+  updated-dependencies:
+  - dependency-name: actions/setup-python
+    dependency-version: '7'
+    dependency-type: direct:production
+    update-type: version-update:semver-major
+  ...
+
+* Package updates. [Matthew Horwood]
+
+* Merge branch 'main' of github.com:mhzawadi/foxess-mqtt. [Matthew Horwood]
+
+* Package update. [Matthew Horwood]
 
 * Build(deps): bump actions/checkout from 6 to 7 (#103) [dependabot[bot]]
 
