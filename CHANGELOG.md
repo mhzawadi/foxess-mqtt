@@ -7,6 +7,13 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+
+## v0.1.16 (2026-08-04)
+
+### Documentation
+
+*  update CHANGELOG.md. [github-actions]
+
 *  update CHANGELOG.md. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
