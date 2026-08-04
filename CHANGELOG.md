@@ -9,6 +9,8 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
 *  update composer lock file. [github-actions]
 
 *  update CHANGELOG.md. [github-actions]
@@ -24,6 +26,16 @@
 *  undo deplendabot. [Matthew Horwood]
 
 ### Other
+
+* V0.1.16 (#108) [Matthew Horwood]
+
+  * v0.1.16
+
+  doc: how to make changes
+
+  * feat: dependabot grouping
+
+  * package updates
 
 * Build(deps): bump actions/setup-python from 6 to 7 (#107) [dependabot[bot]]
 
