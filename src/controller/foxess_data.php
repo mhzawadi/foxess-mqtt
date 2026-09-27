@@ -21,6 +21,8 @@ class foxess_data extends json {
   protected $data;
   protected $config;
 
+  /**
+   */
   public function __construct(){
     try {
       $this->config = new config();

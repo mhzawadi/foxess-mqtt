@@ -14,6 +14,8 @@ class config extends json {
   public $mqtt_pass;
   public $mqtt_topic;
 
+  /**
+   */
   public function __construct(){
     try {
       $config = $this->load_from_file('data/config.json')
