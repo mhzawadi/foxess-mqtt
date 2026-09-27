@@ -13,6 +13,9 @@ class data extends json {
   protected $request;
   protected $config;
   protected $error_codes;
+
+  /**
+   */
   public function __construct($config){
     $this->config = $config;
     $this->request = new request($config);
