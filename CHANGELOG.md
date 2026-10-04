@@ -7,6 +7,26 @@
 
 *  update CHANGELOG.md. [github-actions]
 
+*  update CHANGELOG.md. [github-actions]
+
+### Other
+
+* FOXES-2 / documentation (#112) [Matthew Horwood]
+
+  * FOXES-2 / documentation
+
+  doc: add doc blocks
+
+  * FOXES-2 / documentation
+
+  chor: update composer
+
+  * FOXES-2 / documentation
+
+  feat: build docker image
+  chor: tidy testing script
+  chor: package updates
+
 
 ## v0.1.16 (2026-08-04)
 
