@@ -24,7 +24,6 @@ services:
       - /Users/matt/data/foxess:/foxess-mqtt/data
     environment:
       - TIMEZONE=Europe/London
-    command: ["/usr/bin/php", "run.php"]
     depends_on:
       - redis
       - mosquitto
