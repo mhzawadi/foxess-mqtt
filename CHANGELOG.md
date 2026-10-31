@@ -1,6 +1,24 @@
 # Changelog
 
 
+## (unreleased)
+
+### Documentation
+
+*  update CHANGELOG.md. [github-actions]
+
+### Other
+
+* DOCKE-2/Update php (#114) [Matthew Horwood]
+
+  * DOCKE-2/Update php
+
+  feat: alpine 3.24
+  feat: php 8.5
+  chor: fix compose files
+  chor: dependancy update
+
+
 ## v0.1.17 (2026-10-04)
 
 ### Documentation
