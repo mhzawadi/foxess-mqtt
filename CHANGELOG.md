@@ -1,7 +1,7 @@
 # Changelog
 
 
-## (unreleased)
+## v0.1.17 (2026-10-04)
 
 ### Documentation
 

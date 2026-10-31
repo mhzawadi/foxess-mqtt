@@ -3,7 +3,7 @@
     "description": "Foxess Cloud data to MQTT",
     "license": "MIT",
     "keywords": ["foxess","mqtt"],
-    "version": "0.1.10",
+    "version": "0.1.18",
     "authors": [
         {
             "name": "Matthew Horwood",

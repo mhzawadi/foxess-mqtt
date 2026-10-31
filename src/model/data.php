@@ -34,10 +34,10 @@ class data extends json {
     $this->log('Collect data from the cloud', 1);
     $deviceSN = $foxess_data['devices'][$device]['deviceSN'];
     $data = '{
-        "sn": "'.$deviceSN.'",
+        "sns": ["'.$deviceSN.'"],
         "variables": '.json_encode($foxess_data['devices'][$device]['variable_list']).'
     }';
-    $url ='/op/v0/device/real/query';
+    $url ='/op/v1/device/real/query';
     $this_curl = $this->request->sign_post($url, $data, $this->config->foxess_lang);
     if($this->request->getinfo() === false){
       return false;
@@ -53,8 +53,22 @@ class data extends json {
       $this->redis->set($deviceSN.'_collected', $return_data);
       $collected_data = $return_data;
       $this->log('Data collected', 1);
+      $this->filter_variable_list($collected_data);
       return $collected_data;
     }
+  }
+
+  /**
+   * Filter stored variable list
+   *
+   * take the latest list of variables and filter out the list full list
+   *
+   * @param array $collected_data The data from Foxess
+   * @return void
+   */
+  public function filter_variable_list($collected_data) {
+    $redis_list = $this->redis->get('foxess_data');
+
   }
 
   /**

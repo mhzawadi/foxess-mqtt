@@ -1,14 +1,14 @@
-FROM alpine:3.23
+FROM alpine:3.24
 LABEL org.opencontainers.image.authors="matt@horwood.biz"
 
 # Install required deb packages
 RUN apk update && apk upgrade && \
-    apk add php84-json php84-curl git php84 php84-phar php84-xml php84-tokenizer \
-    php84-sockets curl php84-openssl php84-mbstring php84-dom php84-xmlwriter php84-pecl-redis \
-    php84-ctype \
+    apk add php85-json php85-curl git php85 php85-phar php85-xml php85-tokenizer \
+    php85-sockets curl php85-openssl php85-mbstring php85-dom php85-xmlwriter php85-pecl-redis \
+    php85-ctype \
     && rm -f /var/cache/apk/*; \
     [ -f /usr/bin/php ] && rm -f /usr/bin/php; \
-    ln -s /usr/bin/php84 /usr/bin/php; \
+    ln -s /usr/bin/php85 /usr/bin/php; \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
     php -r "unlink('composer-setup.php');" && \
