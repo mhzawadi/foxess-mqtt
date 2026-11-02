@@ -53,22 +53,8 @@ class data extends json {
       $this->redis->set($deviceSN.'_collected', $return_data);
       $collected_data = $return_data;
       $this->log('Data collected', 1);
-      $this->filter_variable_list($collected_data);
       return $collected_data;
     }
-  }
-
-  /**
-   * Filter stored variable list
-   *
-   * take the latest list of variables and filter out the list full list
-   *
-   * @param array $collected_data The data from Foxess
-   * @return void
-   */
-  public function filter_variable_list($collected_data) {
-    $redis_list = $this->redis->get('foxess_data');
-
   }
 
   /**
